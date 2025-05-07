@@ -1,0 +1,10 @@
+D:\Universidad\MATCOM\Programación\2do_proyecto\Segundo_Proyecto\obj\Debug\net8.0-windows\Segundo_Proyecto.csproj.AssemblyReference.cache
+D:\Universidad\MATCOM\Programación\2do_proyecto\Segundo_Proyecto\obj\Debug\net8.0-windows\Segundo_Proyecto.Editor.resources
+D:\Universidad\MATCOM\Programación\2do_proyecto\Segundo_Proyecto\obj\Debug\net8.0-windows\Segundo_Proyecto.Form1.resources
+D:\Universidad\MATCOM\Programación\2do_proyecto\Segundo_Proyecto\obj\Debug\net8.0-windows\Segundo_Proyecto.Properties.Resource1.resources
+D:\Universidad\MATCOM\Programación\2do_proyecto\Segundo_Proyecto\obj\Debug\net8.0-windows\Segundo_Proyecto.Resource1.resources
+D:\Universidad\MATCOM\Programación\2do_proyecto\Segundo_Proyecto\obj\Debug\net8.0-windows\Segundo_Proyecto.csproj.GenerateResource.cache
+D:\Universidad\MATCOM\Programación\2do_proyecto\Segundo_Proyecto\obj\Debug\net8.0-windows\Segundo_Proyecto.GeneratedMSBuildEditorConfig.editorconfig
+D:\Universidad\MATCOM\Programación\2do_proyecto\Segundo_Proyecto\obj\Debug\net8.0-windows\Segundo_Proyecto.AssemblyInfoInputs.cache
+D:\Universidad\MATCOM\Programación\2do_proyecto\Segundo_Proyecto\obj\Debug\net8.0-windows\Segundo_Proyecto.AssemblyInfo.cs
+D:\Universidad\MATCOM\Programación\2do_proyecto\Segundo_Proyecto\obj\Debug\net8.0-windows\Segundo_Proyecto.csproj.CoreCompileInputs.cache
