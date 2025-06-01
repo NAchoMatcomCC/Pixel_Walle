@@ -1,5 +1,12 @@
 public class Label : Stmt
-{
-    public Token Name { get; }
-    public Label(Token name) => Name = name;
-}
+    {
+        public string Name { get; }
+
+        public Label(Token labelToken) 
+            : base(labelToken)
+        {
+            Name = labelToken.Lexeme;
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor) => visitor.Visit(this);
+    }

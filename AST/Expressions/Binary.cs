@@ -1,12 +1,16 @@
-public class Binary : Expr
-{
-    public Expr Left { get; }
-    public Token Operator { get; } // Token como "+", ">", etc.
-    public Expr Right { get; }
-    public Binary(Expr left, Token op, Expr right)
+ public abstract class BinaryExpr : Expr
     {
-        Left = left;
-        Operator = op;
-        Right = right;
+        public Expr Left { get; }
+        public Token Operator { get; }
+        public Expr Right { get; }
+
+        public BinaryExpr(Expr left, Token op, Expr right) 
+            : base(left.StartToken)
+        {
+            Left = left;
+            Operator = op;
+            Right = right;
+        }
+
+        //public override T Accept<T>(IAstVisitor<T> visitor) => visitor.Visit(this);
     }
-}

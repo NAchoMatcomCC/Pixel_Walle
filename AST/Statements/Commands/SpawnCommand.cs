@@ -1,10 +1,29 @@
-public class SpawnCommand : Stmt
-{
-    public Expr X { get; } // Coordenada X (ej: 0)
-    public Expr Y { get; } // Coordenada Y (ej: 0)
-    public SpawnCommand(Expr x, Expr y)
+public class SpawnStmt : Stmt
     {
-        X = x;
-        Y = y;
+        public Expr X { get; }
+        public Expr Y { get; }
+
+        public SpawnStmt(Token spawnToken, Expr x, Expr y) 
+            : base(spawnToken)
+        {
+            X = x;
+            Y = y;
+        }
+
+        public override T Accept<T>(IAstVisitor<T> visitor) => visitor.Visit(this);
+
+
+        public override void CheckSemantics(SemanticContext context)
+        {
+            if (context.SpawnCalled)
+                throw new Exception("Spawn can only be called once.");
+    
+            if (!X.IsNumeric(context) || !Y.IsNumeric(context))
+                throw new Exception("Spawn arguments must be numeric.");
+    
+            context.SpawnCalled = true;
+    
+            X.CheckSemantics(context);
+            Y.CheckSemantics(context);
+        }
     }
-}

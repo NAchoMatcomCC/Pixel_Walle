@@ -1,10 +1,34 @@
-public class Assignment : Stmt
-{
-    public Token VariableName { get; } // Nombre de la variable (ej: "n")
-    public Expr Value { get; } // Valor asignado (ej: 5 + 3)
-    public Assignment(Token name, Expr value)
+public class AssignmentStmt : Stmt
     {
-        VariableName = name;
-        Value = value;
+        public string VariableName { get; }
+        public Expr Expression { get; }
+
+        public AssignmentStmt(Token identifier, Expr expression) 
+            : base(identifier)
+        {
+            VariableName = identifier.Lexeme;
+            Expression = expression;
+        }
+
+
+
+         public override T Accept<T>(IAstVisitor<T> visitor) => visitor.Visit(this);
+
+
+
+        public override void CheckSemantics(SemanticContext context)
+        {
+            Expression.CheckSemantics(context);
+    
+            if (!IsValidVariableName(VariableName))
+                throw new Exception($"Invalid variable name: {VariableName}");
+    
+            context.DefineVariable(VariableName, Expression.IsNumeric(context));
+        }
+    
+        private bool IsValidVariableName(string name)
+        {
+            if (string.IsNullOrEmpty(name)) return false;
+            return char.IsLetter(name[0]) || name[0] == '_'; // Puedes extender esto según las reglas del lenguaje
+        }
     }
-}

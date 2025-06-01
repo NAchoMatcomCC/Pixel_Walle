@@ -1,30 +1,27 @@
-public class DrawLineStmt : Stmt
+public class DrawCircleStmt : Stmt
     {
         public Expr DirX { get; }
         public Expr DirY { get; }
-        public Expr Distance { get; }
+        public Expr Radius { get; }
 
-        public DrawLineStmt(Token drawToken, Expr dirX, Expr dirY, Expr distance) 
+        public DrawCircleStmt(Token drawToken, Expr dirX, Expr dirY, Expr radius) 
             : base(drawToken)
         {
             DirX = dirX;
             DirY = dirY;
-            Distance = distance;
+            Radius = radius;
         }
 
-
         public override T Accept<T>(IAstVisitor<T> visitor) => visitor.Visit(this);
-
 
         public override void CheckSemantics(SemanticContext context)
     {
         DirX.CheckSemantics(context);
         DirY.CheckSemantics(context);
-        Distance.CheckSemantics(context);
+        Radius.CheckSemantics(context);
 
-        if (!DirX.IsNumeric(context) || !DirY.IsNumeric(context) || !Distance.IsNumeric(context))
+        if (!DirX.IsNumeric(context) || !DirY.IsNumeric(context) || !Radius.IsNumeric(context))
             throw new Exception("DrawLine expects numeric arguments.");
     }
 
-    
     }

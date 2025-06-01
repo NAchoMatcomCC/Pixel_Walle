@@ -1,10 +1,14 @@
 public class GoTo : Stmt
-{
-    public Token Label { get; } // Etiqueta destino (ej: "loop1")
-    public Expr Condition { get; } // Condición booleana (ej: n > 0)
-    public GoTo(Token label, Expr condition)
     {
-        Label = label;
-        Condition = condition;
+        public string Label { get; }
+        public Expr Condition { get; }
+
+        public GoTo(Token gotoToken, Token labelToken, Expr condition) 
+            : base(gotoToken)
+        {
+            Label = labelToken.Lexeme;
+            Condition = condition;
+        }
+
+         public override T Accept<T>(IAstVisitor<T> visitor) => visitor.Visit(this);
     }
-}
