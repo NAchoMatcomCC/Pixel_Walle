@@ -1,8 +1,23 @@
-public class ParseError : Exception
-{
-    public Token Token { get; }
-    public ParseError(Token token, string message) : base($"Línea {token.Line}: {message}")
+public class CompilingError
     {
-        Token = token;
+        public ErrorCode Code { get; private set; }
+
+        public string Argument { get; private set; }
+
+        public int Line {get; private set;}
+
+        public CompilingError(int line, ErrorCode code, string argument)
+        {
+            this.Code = code;
+            this.Argument = argument;
+            Line = line;
+        }
     }
-}
+
+    public enum ErrorCode
+    {
+        None,
+        Expected,
+        Invalid,
+        Unknown,
+    }

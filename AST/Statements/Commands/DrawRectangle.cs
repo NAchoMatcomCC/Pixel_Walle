@@ -16,7 +16,7 @@ public class DrawRectangleStmt : Stmt
             Height = height;
         }
 
-        public override T Accept<T>(IAstVisitor<T> visitor) => visitor.Visit(this);
+       
 
 
         public override void CheckSemantics(SemanticContext context)
@@ -31,6 +31,10 @@ public class DrawRectangleStmt : Stmt
             !Distance.IsNumeric(context) || !Width.IsNumeric(context) || !Height.IsNumeric(context))
             throw new Exception("DrawRectangle expects numeric arguments.");
     }
+
+
+    public override void Accept(INodeVisitor visitor) => visitor.Visit(this);
+
 
 
 

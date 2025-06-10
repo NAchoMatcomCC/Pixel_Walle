@@ -1,14 +1,21 @@
 public class Var : Expr
+{
+    public string Name { get; }
+
+    public Var(string name, Token startoken) : base(startoken)
     {
-        public string Name { get; }
-
-        public Var(Token token) 
-            : base(token)
-        {
-            Name = token.Lexeme;
-        }
-
-         public override T Accept<T>(IAstVisitor<T> visitor) => visitor.Visit(this);
+        Name = name;
     }
 
+    public override void CheckSemantics(SemanticContext context)
+    {
+        if (!context.IsVariableDefined(Name))
+            throw new Exception($"Variable '{Name}' is not defined.");
+    }
+
+    public override bool IsNumeric(SemanticContext context) => context.IsVariableNumeric(Name);
+    public override bool IsBoolean(SemanticContext context) => !context.IsVariableNumeric(Name);
+
     
+
+}

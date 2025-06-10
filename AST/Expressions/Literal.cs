@@ -1,12 +1,21 @@
-public class LiteralExpr : Expr
+public class Literal : Expr
+{
+    public object Value { get; }
+
+    public Literal(object value, Token startoken) : base(startoken)
     {
-        public object Value { get; }
-
-        public LiteralExpr(Token token) 
-            : base(token)
-        {
-            Value = token.Literal;
-        }
-
-        public override T Accept<T>(IAstVisitor<T> visitor) => visitor.Visit(this);
+        Value = value;
     }
+
+    public override void CheckSemantics(SemanticContext context)
+    {
+        // Nada que verificar en literales
+    }
+
+    public override bool IsNumeric(SemanticContext context) => Value is int;
+    public override bool IsBoolean(SemanticContext context)
+        => Value is bool || (Value is int i && (i == 0 || i == 1));
+
+    
+
+}

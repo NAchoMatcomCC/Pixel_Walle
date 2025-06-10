@@ -4,7 +4,7 @@ using System.Collections.Generic;
 class Lexer
 {
     private string source;
-    private List<Token> tokens = new List<Token>();
+    public List<Token> tokens = new List<Token>();
     private int start = 0;
     private int current = 0;
     private int line = 1;

@@ -13,7 +13,7 @@ public class DrawLineStmt : Stmt
         }
 
 
-        public override T Accept<T>(IAstVisitor<T> visitor) => visitor.Visit(this);
+        
 
 
         public override void CheckSemantics(SemanticContext context)
@@ -25,6 +25,8 @@ public class DrawLineStmt : Stmt
         if (!DirX.IsNumeric(context) || !DirY.IsNumeric(context) || !Distance.IsNumeric(context))
             throw new Exception("DrawLine expects numeric arguments.");
     }
+
+    public override void Accept(INodeVisitor visitor) => visitor.Visit(this);
 
     
     }

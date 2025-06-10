@@ -1,4 +1,4 @@
-public class AssignmentStmt : Stmt
+public class AssignmentStmt : ASTNode
     {
         public string VariableName { get; }
         public Expr Expression { get; }
@@ -12,7 +12,7 @@ public class AssignmentStmt : Stmt
 
 
 
-         public override T Accept<T>(IAstVisitor<T> visitor) => visitor.Visit(this);
+    
 
 
 
@@ -31,4 +31,6 @@ public class AssignmentStmt : Stmt
             if (string.IsNullOrEmpty(name)) return false;
             return char.IsLetter(name[0]) || name[0] == '_'; // Puedes extender esto según las reglas del lenguaje
         }
+
+        public override void Accept(INodeVisitor visitor) => visitor.Visit(this);
     }

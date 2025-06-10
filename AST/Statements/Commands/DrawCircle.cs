@@ -12,7 +12,7 @@ public class DrawCircleStmt : Stmt
             Radius = radius;
         }
 
-        public override T Accept<T>(IAstVisitor<T> visitor) => visitor.Visit(this);
+        
 
         public override void CheckSemantics(SemanticContext context)
     {
@@ -23,5 +23,8 @@ public class DrawCircleStmt : Stmt
         if (!DirX.IsNumeric(context) || !DirY.IsNumeric(context) || !Radius.IsNumeric(context))
             throw new Exception("DrawLine expects numeric arguments.");
     }
+
+    public override void Accept(INodeVisitor visitor) => visitor.Visit(this);
+
 
     }

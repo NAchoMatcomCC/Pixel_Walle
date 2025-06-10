@@ -8,7 +8,7 @@ public class SizeStmt : Stmt
             SizeValue = sizeValue;
         }
 
-        public override T Accept<T>(IAstVisitor<T> visitor) => visitor.Visit(this);
+        
 
         public override void CheckSemantics(SemanticContext context)
         {
@@ -17,4 +17,8 @@ public class SizeStmt : Stmt
             if (!SizeValue.IsNumeric(context))
                 throw new Exception("Size expects a numeric argument.");
         }
+
+
+        public override void Accept(INodeVisitor visitor) => visitor.Visit(this);
+
     }

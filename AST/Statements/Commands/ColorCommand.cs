@@ -14,7 +14,7 @@ public class ColorCommand : Stmt
             ColorValue = colorValue;
         }
 
-         public override T Accept<T>(IAstVisitor<T> visitor) => visitor.Visit(this);
+        
 
 
         public override void CheckSemantics(SemanticContext context)
@@ -22,4 +22,7 @@ public class ColorCommand : Stmt
             if (!AllowedColors.Contains(ColorValue))
                 throw new Exception($"Color '{ColorValue}' is not valid.");
         }
+
+        public override void Accept(INodeVisitor visitor) => visitor.Visit(this);
+
     }

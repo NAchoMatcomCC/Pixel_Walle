@@ -9,4 +9,6 @@ public abstract class ASTNode
 
 
         public abstract void CheckSemantics(SemanticContext context);
+
+        public abstract void Accept(INodeVisitor visitor);
     }

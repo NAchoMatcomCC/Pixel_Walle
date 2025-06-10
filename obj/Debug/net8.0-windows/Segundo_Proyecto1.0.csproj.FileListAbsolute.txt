@@ -1,0 +1,17 @@
+D:\Universidad\MATCOM\Programación\2do_proyecto\Segundo_Proyecto1.0\bin\Debug\net8.0-windows\Segundo_Proyecto1.0.exe
+D:\Universidad\MATCOM\Programación\2do_proyecto\Segundo_Proyecto1.0\bin\Debug\net8.0-windows\Segundo_Proyecto1.0.deps.json
+D:\Universidad\MATCOM\Programación\2do_proyecto\Segundo_Proyecto1.0\bin\Debug\net8.0-windows\Segundo_Proyecto1.0.runtimeconfig.json
+D:\Universidad\MATCOM\Programación\2do_proyecto\Segundo_Proyecto1.0\bin\Debug\net8.0-windows\Segundo_Proyecto1.0.dll
+D:\Universidad\MATCOM\Programación\2do_proyecto\Segundo_Proyecto1.0\bin\Debug\net8.0-windows\Segundo_Proyecto1.0.pdb
+D:\Universidad\MATCOM\Programación\2do_proyecto\Segundo_Proyecto1.0\obj\Debug\net8.0-windows\Segundo_Proyecto1.0.csproj.GenerateResource.cache
+D:\Universidad\MATCOM\Programación\2do_proyecto\Segundo_Proyecto1.0\obj\Debug\net8.0-windows\Segundo_Proyecto1.0.GeneratedMSBuildEditorConfig.editorconfig
+D:\Universidad\MATCOM\Programación\2do_proyecto\Segundo_Proyecto1.0\obj\Debug\net8.0-windows\Segundo_Proyecto1.0.AssemblyInfoInputs.cache
+D:\Universidad\MATCOM\Programación\2do_proyecto\Segundo_Proyecto1.0\obj\Debug\net8.0-windows\Segundo_Proyecto1.0.AssemblyInfo.cs
+D:\Universidad\MATCOM\Programación\2do_proyecto\Segundo_Proyecto1.0\obj\Debug\net8.0-windows\Segundo_Proyecto1.0.csproj.CoreCompileInputs.cache
+D:\Universidad\MATCOM\Programación\2do_proyecto\Segundo_Proyecto1.0\obj\Debug\net8.0-windows\Segundo_Proyecto1.0.dll
+D:\Universidad\MATCOM\Programación\2do_proyecto\Segundo_Proyecto1.0\obj\Debug\net8.0-windows\refint\Segundo_Proyecto1.0.dll
+D:\Universidad\MATCOM\Programación\2do_proyecto\Segundo_Proyecto1.0\obj\Debug\net8.0-windows\Segundo_Proyecto1.0.pdb
+D:\Universidad\MATCOM\Programación\2do_proyecto\Segundo_Proyecto1.0\obj\Debug\net8.0-windows\Segundo_Proyecto1.0.genruntimeconfig.cache
+D:\Universidad\MATCOM\Programación\2do_proyecto\Segundo_Proyecto1.0\obj\Debug\net8.0-windows\ref\Segundo_Proyecto1.0.dll
+D:\Universidad\MATCOM\Programación\2do_proyecto\Segundo_Proyecto1.0\obj\Debug\net8.0-windows\Segundo_Proyecto1._0.MainForm.resources
+D:\Universidad\MATCOM\Programación\2do_proyecto\Segundo_Proyecto1.0\obj\Debug\net8.0-windows\Segundo_Proyecto1._0.CanvasForm.resources

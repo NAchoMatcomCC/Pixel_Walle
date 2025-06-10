@@ -10,8 +10,7 @@ public class SpawnStmt : Stmt
             Y = y;
         }
 
-        public override T Accept<T>(IAstVisitor<T> visitor) => visitor.Visit(this);
-
+        
 
         public override void CheckSemantics(SemanticContext context)
         {
@@ -26,4 +25,8 @@ public class SpawnStmt : Stmt
             X.CheckSemantics(context);
             Y.CheckSemantics(context);
         }
+
+
+        public override void Accept(INodeVisitor visitor) => visitor.Visit(this);
+
     }

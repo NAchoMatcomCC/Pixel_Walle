@@ -6,5 +6,10 @@ public abstract class Expr : ASTNode
 
         public abstract bool IsBoolean(SemanticContext context);
 
-        public abstract T Accept<T>(IAstVisitor<T> visitor);
+        public override void Accept(INodeVisitor visitor)
+        {
+            throw new InvalidOperationException("Expressions do not support Accept for execution.");
+        }
+
+        
     }
