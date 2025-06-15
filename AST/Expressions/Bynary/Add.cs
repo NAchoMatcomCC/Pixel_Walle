@@ -16,4 +16,6 @@ public class AddExpr : BinaryExpr
         if (!Left.IsNumeric(context) || !Right.IsNumeric(context))
             throw new Exception("Addition operands must be numeric.");
     }
+
+    public override string ToString() => $"({Left} + {Right})";
 }

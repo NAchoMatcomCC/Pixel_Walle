@@ -20,4 +20,8 @@ public class DivideExpr : BinaryExpr
         if (Right is Literal lit && Convert.ToDouble(lit.Value) == 0)
             throw new Exception("Division by zero is not allowed.");
     }
+
+    public override string ToString() => $"({Left} / {Right})";
+
+    
 }

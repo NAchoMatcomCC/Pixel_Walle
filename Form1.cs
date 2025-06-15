@@ -30,10 +30,10 @@ namespace Segundo_Proyecto1._0
             codeEditor.ScrollBars = RichTextBoxScrollBars.ForcedBoth;
 
             // Evento para scroll horizontal
-            codeEditor.HScroll += CodeEditor_HScroll;
+            codeEditor.HScroll += CodeEditor_HScroll!;
 
             // Evento para zoom con Ctrl+Rueda
-            codeEditor.MouseWheel += CodeEditor_MouseWheel;
+            codeEditor.MouseWheel += CodeEditor_MouseWheel!;
         }
 
         // Habilitar doble búfer para reducir parpadeo
@@ -41,7 +41,7 @@ namespace Segundo_Proyecto1._0
         {
             var prop = typeof(Control).GetProperty("DoubleBuffered",
                 System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
-            prop.SetValue(control, enabled, null);
+            prop?.SetValue(control, enabled, null);
         }
 
 
@@ -278,34 +278,85 @@ namespace Segundo_Proyecto1._0
         {
             string input = Interaction.InputBox("Introduce el tamaño del canvas (ej: 64):", "Redimensionar canvas", "32");
 
-            if (int.TryParse(input, out int newSize) && newSize > 0)
+            if (int.TryParse(input, out int newSize) && newSize > 0 && newSize <= 1000) // Límite máximo agregado
             {
                 InitCanvas(newSize);
             }
             else if (!string.IsNullOrWhiteSpace(input)) // Solo mostrar error si no fue cancelado
             {
-                MessageBox.Show("Entrada inválida. Introduce un número entero mayor que cero.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Entrada inválida. Introduce un número entero mayor que cero y menor o igual a 1000.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
         }
 
         private void button3_Click(object sender, EventArgs e)
         {
-            string code = codeEditor.Text;
-            var lexer = new Lexer(code);
-            var tokens1=new TokenStream(lexer.tokens);
-        var parser = new PixelParser(tokens1);
-        var listaerrores=new List<CompilingError>();
-        var program = parser.ParseProgram(listaerrores);
+            try
+    {
+        // Limpiar el canvas (opcional, dependiendo de tus requisitos)
+        canvasData.Clear(Color.White);
         
-      
-        var runner = new ProgramRunner(program, canvasData);
+        var source = codeEditor.Text;
+        var scanner = new Lexer(source);
+        var tokens = scanner.ScanTokens();
+        
+        var parser = new Parser(tokens);
+        List<Stmt> program = parser.Parse();
+        List<ASTNode> astNodes = program.Cast<ASTNode>().ToList();
+        // Verificar errores de compilación
+        if (parser.Errors.Count > 0)
+        {
+            MessageBox.Show("Errores de compilación:\n" + 
+                string.Join("\n", parser.Errors.Select(e => $"[Línea {e.Line}] {e.Argument}")), 
+                "Errores", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            return;
+        }
+
+        var runner = new ProgramRunner(astNodes, canvasData);
         runner.Run();
         
-      
-        //canvas_Panel.Invalidate();
+        canvas_Panel.Invalidate(); // Redibujar el canvas
         
-        
+        MessageBox.Show("Ejecución completada exitosamente!", "Éxito", 
+            MessageBoxButtons.OK, MessageBoxIcon.Information);
+    }
+    catch (Exception ex)
+    {
+        MessageBox.Show("Error durante la ejecución:\n" + ex.Message, "Error", 
+            MessageBoxButtons.OK, MessageBoxIcon.Error);
+    }
         }
+
+        // Agregar un método de prueba para simular el flujo de ejecución
+        /*private void TestSpawnExecution()
+        {
+            try
+            {
+                string testCode = "Spawn(0, 0)\nColor(\"Red\")\nDrawLine(1, 0, 5)";
+                var scanner = new Lexer(testCode);
+                var tokens = scanner.ScanTokens();
+                var stream = new TokenStream(tokens);
+
+                var parser = new PixelParser(stream);
+                var errors = new List<CompilingError>();
+                var program = parser.ParseProgram(errors);
+
+                if (errors.Count > 0)
+                {
+                    MessageBox.Show("Errores de compilación:\n" + string.Join("\n", errors.Select(e => $"Línea {e.Line}: {e.Argument}")), "Errores", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                var runner = new ProgramRunner(program, canvasData);
+                runner.Run();
+                canvas_Panel.Invalidate(); // Redibujar
+
+                MessageBox.Show("Ejecución completada exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Error durante la ejecución:\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }*/
     }
 }
 

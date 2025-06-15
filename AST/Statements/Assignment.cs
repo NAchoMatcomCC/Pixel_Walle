@@ -1,4 +1,4 @@
-public class AssignmentStmt : ASTNode
+public class AssignmentStmt : Stmt
     {
         public string VariableName { get; }
         public Expr Expression { get; }
@@ -33,4 +33,9 @@ public class AssignmentStmt : ASTNode
         }
 
         public override void Accept(INodeVisitor visitor) => visitor.Visit(this);
+
+        public override string ToString()
+        {
+            return $"{VariableName} <- {Expression}";
+        }
     }

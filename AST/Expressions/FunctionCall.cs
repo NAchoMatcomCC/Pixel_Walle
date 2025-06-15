@@ -1,14 +1,23 @@
-public class FunctionCallExpr : Expr
+public class FunctionCall : Expr
+{
+    public string FunctionName { get; }
+    public List<Expr> Arguments { get; }
+
+    public FunctionCall(string functionName, List<Expr> arguments, Token token) 
+        : base(token)
     {
-        public string FunctionName { get; }
-        public List<Expr> Arguments { get; }
-
-        public FunctionCallExpr(Token identifier, List<Expr> arguments) 
-            : base(identifier)
-        {
-            FunctionName = identifier.Lexeme;
-            Arguments = arguments;
-        }
-
-         public override T Accept<T>(IAstVisitor<T> visitor) => visitor.Visit(this);
+        FunctionName = functionName;
+        Arguments = arguments;
     }
+
+    public override void CheckSemantics(SemanticContext context)
+    {
+        foreach (var arg in Arguments)
+        {
+            arg.CheckSemantics(context);
+        }
+    }
+
+    public override bool IsNumeric(SemanticContext context) => true;
+    public override bool IsBoolean(SemanticContext context) => false;
+}

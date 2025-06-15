@@ -29,4 +29,9 @@ public class SpawnStmt : Stmt
 
         public override void Accept(INodeVisitor visitor) => visitor.Visit(this);
 
+        public override string ToString()
+        {
+            return $"Spawn({X}, {Y})";
+        }
+
     }

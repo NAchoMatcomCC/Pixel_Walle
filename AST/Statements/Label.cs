@@ -1,4 +1,4 @@
-public class Label : ASTNode
+public class Label : Stmt
 {
     public string Name { get; }
 
@@ -26,5 +26,10 @@ public class Label : ASTNode
     }
 
     public override void Accept(INodeVisitor visitor) => visitor.Visit(this);
+
+    public override string ToString()
+    {
+        return $"Label {Name}";
+    }
 
 }

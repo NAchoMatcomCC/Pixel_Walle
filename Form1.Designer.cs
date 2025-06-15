@@ -22,13 +22,15 @@
 
         private string currentFilePath;
 
-
-
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing)
             {
-                components.Dispose();
+                components?.Dispose();
+                splitContainer?.Dispose();
+                lineNumberPanel?.Dispose();
+                canvas_Panel?.Dispose();
+                codeEditor?.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -171,6 +173,8 @@
             splitContainer.ResumeLayout(false);
             lineNumberPanel.ResumeLayout(false);
             ResumeLayout(false);
+
+            this.button3.Click += new System.EventHandler(this.button3_Click);
         }
 
         private Button button1;

@@ -26,5 +26,10 @@ public class DrawCircleStmt : Stmt
 
     public override void Accept(INodeVisitor visitor) => visitor.Visit(this);
 
+    public override string ToString()
+    {
+        return $"DrawCircle({DirX}, {DirY}, {Radius})";
+    }
+
 
     }

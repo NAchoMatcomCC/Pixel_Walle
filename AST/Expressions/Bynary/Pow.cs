@@ -16,4 +16,8 @@ public class PowerExpr : BinaryExpr
         if (!Left.IsNumeric(context) || !Right.IsNumeric(context))
             throw new Exception("Exponentiation operands must be numeric.");
     }
+
+    public override string ToString() => $"({Left} ** {Right})";
+
+
 }

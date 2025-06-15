@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-
 class Lexer
 {
     private string source;
@@ -16,20 +13,21 @@ class Lexer
 
     private static readonly Dictionary<string, TokenType> Keywords = new()
     {
-        {"Spawn", TokenType.SPAWN},
-        {"Color", TokenType.COLOR},
-        {"DrawLine", TokenType.DRAW_LINE},
-        {"DrawCircle", TokenType.DRAW_CIRCLE},
-        {"DrawRectangle", TokenType.DRAW_RECTANGLE},
-        {"Fill", TokenType.FILL},
-        {"GoTo", TokenType.GOTO},
-        {"GetActualX", TokenType.GET_ACTUAL_X},
-        {"GetActualY", TokenType.GET_ACTUAL_Y},
-        {"GetCanvasSize", TokenType.GET_CANVAS_SIZE},
-        {"GetColorCount", TokenType.GET_COLOR_COUNT},
-        {"IsBrushColor", TokenType.IS_BRUSH_COLOR},
-        {"IsBrushSize", TokenType.IS_BRUSH_SIZE},
-        {"IsCanvasColor", TokenType.IS_CANVAS_COLOR},
+        {"Spawn", TokenType.KEYWORD},
+        {"Color", TokenType.KEYWORD},
+        {"DrawLine", TokenType.KEYWORD},
+        {"DrawCircle", TokenType.KEYWORD},
+        {"DrawRectangle", TokenType.KEYWORD},
+        {"Fill", TokenType.KEYWORD},
+        {"GoTo", TokenType.KEYWORD},
+        {"Label", TokenType.KEYWORD},
+        {"GetActualX", TokenType.KEYWORD},
+        {"GetActualY", TokenType.KEYWORD},
+        {"GetCanvasSize", TokenType.KEYWORD},
+        {"GetColorCount", TokenType.KEYWORD},
+        {"IsBrushColor", TokenType.KEYWORD},
+        {"IsBrushSize", TokenType.KEYWORD},
+        {"IsCanvasColor", TokenType.KEYWORD},
         {"true", TokenType.TRUE},
         {"false", TokenType.FALSE}
     };
@@ -41,7 +39,7 @@ class Lexer
             start = current;
             ScanToken();
         }
-        tokens.Add(new Token(TokenType.EOF, "", null, line));
+        tokens.Add(new Token(TokenType.EOF, "", "", line));
         return tokens;
     }
 
@@ -63,10 +61,9 @@ class Lexer
             case '%': AddToken(TokenType.PERCENT); break;
             case '=': AddToken(Match('=') ? TokenType.EQUAL_EQUAL : TokenType.EQUAL); break;
             case '>': AddToken(Match('=') ? TokenType.GREATER_EQUAL : TokenType.GREATER); break;
-            case '<': AddToken(Match('=') ? TokenType.LESS_EQUAL : TokenType.LESS); break;
+            case '<': AddToken(Match('=') ? TokenType.LESS_EQUAL : Match('-')? TokenType.ASSIGNMENT :TokenType.LESS); break;
             case '&': if (Match('&')) AddToken(TokenType.AND); break;
             case '|': if (Match('|')) AddToken(TokenType.OR); break;
-            case '←': AddToken(TokenType.ARROW); break;
             case ' ':
             case '\r':
             case '\t':
@@ -82,6 +79,7 @@ class Lexer
             default:
                 if (IsDigit(c)) ReadNumber();
                 else if (IsAlpha(c)) ReadIdentifier();
+                
                 else throw new Exception($"Carácter inesperado en línea {line}: '{c}'");
                 break;
         }
@@ -96,10 +94,10 @@ class Lexer
         return true;
     }
 
-    private void AddToken(TokenType type, object literal = null)
+    private void AddToken(TokenType type, object? literal = null)
     {
         string text = source.Substring(start, current - start);
-        tokens.Add(new Token(type, text, literal, line));
+        tokens.Add(new Token(type, text, literal ?? "", line)); // Se asegura que literal no sea nulo
     }
 
     private void ReadNumber()

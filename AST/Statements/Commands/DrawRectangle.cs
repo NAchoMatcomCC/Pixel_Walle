@@ -35,6 +35,10 @@ public class DrawRectangleStmt : Stmt
 
     public override void Accept(INodeVisitor visitor) => visitor.Visit(this);
 
+    public override string ToString()
+    {
+        return $"DrawRectangle({DirX}, {DirY}, {Distance}, {Width}, {Height})";
+    }
 
 
 

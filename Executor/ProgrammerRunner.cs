@@ -5,9 +5,11 @@ public class ProgramRunner
     private readonly List<ASTNode> program;
     private readonly Dictionary<string, int> labelMap = new();
     private readonly Interpreter interpreter;
+    private readonly CanvasData canvas;
 
     public ProgramRunner(List<ASTNode> program, CanvasData canvas)
     {
+        this.canvas=canvas;
         this.program = program;
         this.interpreter = new Interpreter(canvas);
         IndexLabels();
@@ -29,7 +31,9 @@ public class ProgramRunner
 
     public void Run()
     {
-        for (int pc = 0; pc < program.Count; pc++)
+        try
+        {
+            for (int pc = 0; pc < program.Count; pc++)
         {
             var node = program[pc];
 
@@ -48,5 +52,17 @@ public class ProgramRunner
 
             node.Accept(interpreter);
         }
+        }
+        catch (System.Exception ex)
+        {
+            int line = 0;
+            if (program.Count > 0 && program[0] is ASTNode firstNode)
+            {
+                line = firstNode.StartToken.Line;
+            }
+        
+            throw new Exception($"[Línea {line}] Error en ejecución: {ex.Message}");
+        }
+        
     }
 }

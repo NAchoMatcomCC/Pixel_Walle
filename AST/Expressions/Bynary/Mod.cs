@@ -19,4 +19,6 @@ public class ModuloExpr : BinaryExpr
         if (Right is Literal lit && Convert.ToInt32(lit.Value) == 0)
             throw new Exception("Modulo by zero is not allowed.");
     }
+
+    public override string ToString() => $"({Left} % {Right})";
 }

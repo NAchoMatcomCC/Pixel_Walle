@@ -1,74 +1,72 @@
-
+using System;
 using System.Collections;
+using System.Collections.Generic;
 
- /* This stream has functions to operate over a list of tokens.
- The methods are simple, you can understand them easily */
 public class TokenStream : IEnumerable<Token>
 {
-    private List<Token> tokens;
+    private readonly List<Token> tokens;
     private int position;
-    public int Position { get { return position; } }
+
+    public int Position => position;
 
     public TokenStream(IEnumerable<Token> tokens)
     {
         this.tokens = new List<Token>(tokens);
-        position = 0;
+        this.position = 0;
     }
 
-    public bool End => position == tokens.Count-1;
+    public bool End => position >= tokens.Count;
 
-    public void MoveNext(int k)
-    {
-        position += k;
-    }
+    public void MoveNext(int k) => position = Math.Min(position + k, tokens.Count);
 
-    public void MoveBack(int k)
-    {
-        position -= k;
-    }
+    public void MoveBack(int k) => position = Math.Max(position - k, 0);
 
-     /* The next methods are used to scroll through the token list 
-     if a condition is satisfied */
-
-     /* In this case, the condition is to have a next position */
     public bool Next()
     {
         if (position < tokens.Count - 1)
-        {
             position++;
-        }
-
         return position < tokens.Count;
     }
 
-    /* In this case, the next position must match the given type */
-    public bool Next( TokenType type )
+    public bool Next(TokenType type)
     {
-        if (position < tokens.Count-1 && LookAhead(1).Type == type)
+        if (position < tokens.Count - 1 && LookAhead(1).Type == type)
         {
             position++;
             return true;
         }
-
         return false;
     }
 
-    /* In this cas, the next position must match the given value */
     public bool Next(string value)
-    {            
-        if (position < tokens.Count-1 && LookAhead(1).Lexeme == value)
+    {
+        if (position < tokens.Count - 1 && LookAhead(1).Lexeme == value)
         {
             position++;
             return true;
         }
-
         return false;
     }
 
-    public bool CanLookAhead(int k = 0)
+    public bool Match(TokenType type)
     {
-        return tokens.Count - position > k;
+        if (Peek().Type == type)
+        {
+            Advance();
+            return true;
+        }
+        return false;
     }
+
+    public Token Advance()
+    {
+        if (!End) position++;
+        return Peek();
+    }
+
+    public Token Peek() => LookAhead(0);
+
+    public bool CanLookAhead(int k = 0) => tokens.Count - position > k;
 
     public Token LookAhead(int k = 0)
     {
@@ -78,8 +76,6 @@ public class TokenStream : IEnumerable<Token>
         if (index >= tokens.Count) index = tokens.Count - 1;
 
         return tokens[index];
-
-        
     }
 
     public IEnumerator<Token> GetEnumerator()
@@ -88,9 +84,5 @@ public class TokenStream : IEnumerable<Token>
             yield return tokens[i];
     }
 
-    IEnumerator IEnumerable.GetEnumerator()
-    {
-        return GetEnumerator();
-    }
+    IEnumerator IEnumerable.GetEnumerator() => GetEnumerator();
 }
-

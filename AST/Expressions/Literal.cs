@@ -16,6 +16,6 @@ public class Literal : Expr
     public override bool IsBoolean(SemanticContext context)
         => Value is bool || (Value is int i && (i == 0 || i == 1));
 
-    
+    public override string ToString() => Value.ToString();
 
 }

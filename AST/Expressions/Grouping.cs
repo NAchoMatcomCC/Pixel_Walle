@@ -15,5 +15,10 @@ public class Grouping : Expr
     public override bool IsNumeric(SemanticContext context) => Expression.IsNumeric(context);
     public override bool IsBoolean(SemanticContext context) => Expression.IsBoolean(context);
 
+    public override string ToString()
+    {
+        return $"({Expression})";
+    }
+
     
 }

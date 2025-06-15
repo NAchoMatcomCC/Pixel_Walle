@@ -1,4 +1,4 @@
-public class GoTo : ASTNode
+public class GoTo : Stmt
 {
     public string LabelName { get; }
     public Expr Condition { get; }
@@ -21,4 +21,9 @@ public class GoTo : ASTNode
     }
 
     public override void Accept(INodeVisitor visitor) => visitor.Visit(this);
+
+    public override string ToString()
+    {
+        return $"Goto[{LabelName}]({Condition})";
+    }
 }

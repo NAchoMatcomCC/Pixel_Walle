@@ -16,4 +16,6 @@ public class AndExpr : BinaryExpr
         if (!Left.IsBoolean(context) || !Right.IsBoolean(context))
             throw new Exception("Logical AND operands must be boolean.");
     }
+
+    public override string ToString() => $"({Left} || {Right})";
 }

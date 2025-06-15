@@ -19,4 +19,6 @@ public class NotEqualExpr : BinaryExpr
             throw new Exception("Cannot compare different types.");
         }
     }
+
+    public override string ToString() => $"({Left} != {Right})";
 }

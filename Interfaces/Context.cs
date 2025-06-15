@@ -3,22 +3,22 @@ using System.Collections.Generic;
 
 public class SemanticContext
 {
-    public HashSet<string> DefinedVariables { get; } = new();
-    public Dictionary<string, bool> VariableTypes { get; } = new(); // true = numérico, false = booleano
+    // Guarda el tipo de cada variable: true = numérico, false = booleano
+    public Dictionary<string, bool> VariableTypes { get; } = new();
 
+    // Guarda etiquetas definidas
     public HashSet<string> Labels { get; } = new();
+
+    // Bandera para verificar si Spawn fue llamado
     public bool SpawnCalled { get; set; } = false;
 
     public void DefineVariable(string name, bool isNumeric)
     {
-        if (!DefinedVariables.Contains(name))
-        {
-            DefinedVariables.Add(name);
+        if (!VariableTypes.ContainsKey(name))
             VariableTypes[name] = isNumeric;
-        }
     }
 
-    public bool IsVariableDefined(string name) => DefinedVariables.Contains(name);
+    public bool IsVariableDefined(string name) => VariableTypes.ContainsKey(name);
 
     public bool IsVariableNumeric(string name) =>
         VariableTypes.TryGetValue(name, out bool isNumeric) && isNumeric;

@@ -21,4 +21,9 @@ public class SizeStmt : Stmt
 
         public override void Accept(INodeVisitor visitor) => visitor.Visit(this);
 
+        public override string ToString()
+        {
+            return $"Size({SizeValue})";
+        }
+
     }

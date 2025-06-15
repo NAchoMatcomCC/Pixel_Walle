@@ -11,5 +11,7 @@ public class MultiplyExpr : BinaryExpr {
     public override bool IsNumeric(SemanticContext context) => true;
     public override bool IsBoolean(SemanticContext context) => false;
 
+    public override string ToString() => $"({Left} * {Right})";
+
     
 }

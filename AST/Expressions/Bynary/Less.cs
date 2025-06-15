@@ -16,4 +16,6 @@ public class LessExpr : BinaryExpr
         if (!Left.IsNumeric(context) || !Right.IsNumeric(context))
             throw new Exception("Comparison operands must be numeric.");
     }
+
+    public override string ToString() => $"({Left} < {Right})";
 }

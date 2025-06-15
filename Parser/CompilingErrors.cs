@@ -12,6 +12,11 @@ public class CompilingError
             this.Argument = argument;
             Line = line;
         }
+
+        public override string ToString()
+        {
+            return $"[Línea {Line}] {Code}: {Argument}";
+        }
     }
 
     public enum ErrorCode

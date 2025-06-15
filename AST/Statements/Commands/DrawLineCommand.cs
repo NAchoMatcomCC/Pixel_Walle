@@ -28,5 +28,10 @@ public class DrawLineStmt : Stmt
 
     public override void Accept(INodeVisitor visitor) => visitor.Visit(this);
 
+    public override string ToString()
+    {
+        return $"DrawLine({DirX}, {DirY}, {Distance})";
+    }
+
     
     }
