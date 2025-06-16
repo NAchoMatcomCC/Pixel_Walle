@@ -8,6 +8,7 @@ namespace Segundo_Proyecto1._0
 {
     public partial class MainForm : Form
     {
+        private Image WALLE;
         public MainForm()
         {
             InitializeComponent();
@@ -17,6 +18,7 @@ namespace Segundo_Proyecto1._0
             currentFilePath = null;
 
             InitCanvas(16);
+            WALLE=Image.FromFile("IMG/WALL-E1.png");
         }
 
         // Configuración inicial del editor
@@ -266,6 +268,21 @@ namespace Segundo_Proyecto1._0
                     }
                 }
             }
+
+        if(canvasData.WallE_X!=null){
+            int drawX = canvasData.WallE_X * cellSize;
+        int drawY = canvasData.WallE_Y * cellSize;
+        
+        // Dibujar la imagen ocupando toda la celda
+        e.Graphics.DrawImage(
+            WALLE,
+            drawX,
+            drawY,
+            cellSize,
+            cellSize
+        );
+        }
+        
         }
 
         private void canvas_Panel_MouseClick(object sender, MouseEventArgs e)

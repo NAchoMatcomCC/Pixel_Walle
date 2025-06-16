@@ -88,14 +88,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 0,
-              "Title": "Form1.cs [Dise\u00F1o]",
+              "Title": "Form1.cs [Design]",
               "DocumentMoniker": "D:\\Universidad\\MATCOM\\Programaci\u00F3n\\2do_proyecto\\Segundo_Proyecto\\Form1.cs",
               "RelativeDocumentMoniker": "Form1.cs",
-              "ToolTip": "D:\\Universidad\\MATCOM\\Programaci\u00F3n\\2do_proyecto\\Segundo_Proyecto\\Form1.cs [Dise\u00F1o]",
-              "RelativeToolTip": "Form1.cs [Dise\u00F1o]",
+              "ToolTip": "D:\\Universidad\\MATCOM\\Programaci\u00F3n\\2do_proyecto\\Segundo_Proyecto\\Form1.cs [Design]",
+              "RelativeToolTip": "Form1.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-04-13T15:56:23.986Z",
-              "EditorCaption": " [Dise\u00F1o]"
+              "EditorCaption": " [Design]"
             }
           ]
         }

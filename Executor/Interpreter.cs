@@ -32,6 +32,9 @@ public class Interpreter : INodeVisitor
     {
         posX = Evaluate(node.X);
         posY = Evaluate(node.Y);
+
+        canvas.WallE_X = posX;
+        canvas.WallE_Y = posY;
     }
 
     public void Visit(ColorCommand node)
@@ -56,7 +59,38 @@ public class Interpreter : INodeVisitor
 
     public void Visit(SizeStmt node)
     {
-        currentSize = Evaluate(node.SizeValue);
+        int size = Evaluate(node.SizeValue);
+    
+        // Asegurar que el tamaño sea positivo e impar
+        currentSize = Math.Max(1, Math.Abs(size));
+        if (currentSize % 2 == 0)
+        {
+            currentSize--; // Hacer impar
+        }
+    }
+
+    private void DrawWithBrush(int x, int y, Color color)
+    {
+        int halfSize = currentSize ;
+        
+    
+        for (int dx = -halfSize; dx < halfSize; dx++)
+        {
+            for (int dy = -halfSize; dy < halfSize; dy++)
+            {
+                int targetX = x + dx;
+                int targetY = y + dy;
+            
+                if (targetX >= 0 && targetX < canvas.Size && 
+                    targetY >= 0 && targetY < canvas.Size)
+                    {
+                        canvas.SetPixel(targetX, targetY, color);
+                    }
+            }
+        }
+        
+        
+        
     }
 
     public void Visit(DrawLineStmt node)
@@ -64,21 +98,119 @@ public class Interpreter : INodeVisitor
         int dx = Evaluate(node.DirX);
         int dy = Evaluate(node.DirY);
         int dist = Evaluate(node.Distance);
-
         Color color = GetCurrentColor();
-
+    
+        // Validar dirección
+        if (Math.Abs(dx) > 1 || Math.Abs(dy) > 1)
+        {
+            throw new Exception($"Dirección inválida: ({dx}, {dy}). " +
+                               "Los valores deben ser -1, 0 o 1");
+        }
+    
         for (int i = 0; i < dist; i++)
         {
-            if (posX < 0 || posX >= canvas.Size || posY < 0 || posY >= canvas.Size)
-            {
-                throw new Exception($"Pixel coordinates ({posX}, {posY}) are out of canvas bounds.");
-            }
-            canvas.SetPixel(posX, posY, color);
-            posX += dx;
-            posY += dy;
+            int currentX = posX + dx * i;
+            int currentY = posY + dy * i;
+            
+
+            if(currentSize==1) canvas.SetPixel(currentX, currentY, color);
+            else DrawWithBrush(currentX, currentY, color);
+           
         }
-        posX += dx * dist;
+
+         posX += dx * dist;
         posY += dy * dist;
+    
+        // Dibujar la posición final
+        //DrawWithBrush(posX, posY, color);
+
+        canvas.WallE_X = posX;
+        canvas.WallE_Y = posY;
+    }
+
+    public void Visit(DrawCircleStmt node)
+    {
+        int centerDx = Evaluate(node.DirX);
+        int centerDy = Evaluate(node.DirY);
+        int radius = Evaluate(node.Radius);
+        int centerX = posX + centerDx;
+        int centerY = posY + centerDy;
+        Color color = GetCurrentColor();
+    
+        // Algoritmo para dibujar círculo (Bresenham)
+        int x = 0;
+        int y = radius;
+        int d = 3 - 2 * radius;
+    
+        while (y >= x)
+        {
+            DrawWithBrush(centerX + x, centerY + y, color);
+            DrawWithBrush(centerX + x, centerY - y, color);
+            DrawWithBrush(centerX - x, centerY + y, color);
+            DrawWithBrush(centerX - x, centerY - y, color);
+            DrawWithBrush(centerX + y, centerY + x, color);
+            DrawWithBrush(centerX + y, centerY - x, color);
+            DrawWithBrush(centerX - y, centerY + x, color);
+            DrawWithBrush(centerX - y, centerY - x, color);
+        
+            x++;
+            if (d > 0)
+            {
+                y--;
+                d = d + 4 * (x - y) + 10;
+            }
+            else
+            {
+                d = d + 4 * x + 6;
+            }
+        }
+    
+        // Actualizar posición al centro del círculo
+        posX = centerX;
+        posY = centerY;
+
+        canvas.WallE_X = posX;
+        canvas.WallE_Y = posY;
+    }
+
+    public void Visit(DrawRectangleStmt node)
+    {
+        int dx = Evaluate(node.DirX);
+        int dy = Evaluate(node.DirY);
+        int distance = Evaluate(node.Distance);
+        int width = Evaluate(node.Width);
+        int height = Evaluate(node.Height);
+        
+        // Calcular posición del centro
+        int centerX = posX + dx * distance;
+        int centerY = posY + dy * distance;
+    
+        // Calcular esquinas
+        int startX = centerX - width / 2;
+        int startY = centerY - height / 2;
+        int endX = startX + width;
+        int endY = startY + height;
+    
+        Color color = GetCurrentColor();
+    
+        // Dibujar rectángulo
+        for (int x = startX; x < endX; x++)
+        {
+            for (int y = startY; y < endY; y++)
+            {
+                if (x >= 0 && x < canvas.Size && y >= 0 && y < canvas.Size)
+                {
+                    DrawWithBrush(x, y, color);
+                }
+            }
+        }
+        
+        // Actualizar posición al centro del rectángulo
+        posX = centerX;
+        posY = centerY;
+
+        canvas.WallE_X = posX;
+        canvas.WallE_Y = posY;
     }
 
     private Color GetCurrentColor()
@@ -87,56 +219,7 @@ public class Interpreter : INodeVisitor
         return ColorMap[currentColor];
     }
 
-    public void Visit(DrawCircleStmt node)
-    {
-        int dx = Evaluate(node.DirX);
-        int dy = Evaluate(node.DirY);
-        int radius = Evaluate(node.Radius);
-        int cx = posX + dx;
-        int cy = posY + dy;
-
-        Color color = GetCurrentColor();
-
-        for (int y = -radius; y <= radius; y++)
-        {
-            for (int x = -radius; x <= radius; x++)
-            {
-                if (x * x + y * y <= radius * radius)
-                {
-                    if (cx + x < 0 || cx + x >= canvas.Size || cy + y < 0 || cy + y >= canvas.Size)
-                    {
-                        throw new Exception($"Pixel coordinates ({cx + x}, {cy + y}) are out of canvas bounds.");
-                    }
-                    canvas.SetPixel(cx + x, cy + y, color);
-                }
-            }
-        }
-    }
-
-    public void Visit(DrawRectangleStmt node)
-    {
-        int dx = Evaluate(node.DirX);
-        int dy = Evaluate(node.DirY);
-        int dist = Evaluate(node.Distance);
-        int w = Evaluate(node.Width);
-        int h = Evaluate(node.Height);
-        int rx = posX + dx;
-        int ry = posY + dy;
-
-        Color color = GetCurrentColor();
-
-        for (int i = 0; i < w; i++)
-        {
-            for (int j = 0; j < h; j++)
-            {
-                if (rx + i < 0 || rx + i >= canvas.Size || ry + j < 0 || ry + j >= canvas.Size)
-                {
-                    throw new Exception($"Pixel coordinates ({rx + i}, {ry + j}) are out of canvas bounds.");
-                }
-                canvas.SetPixel(rx + i, ry + j, color);
-            }
-        }
-    }
+    
 
     private void FloodFill(int x, int y, Color target, Color replacement)
     {
@@ -189,6 +272,10 @@ public class Interpreter : INodeVisitor
     {
         // Control de flujo lo maneja ProgramRunner
     }
+
+    
+
+
 
     public int Evaluate(Expr expr)
     {

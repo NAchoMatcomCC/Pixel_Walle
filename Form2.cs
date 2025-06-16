@@ -13,6 +13,7 @@ namespace Segundo_Proyecto1._0
 {
     public partial class CanvasForm : Form
     {
+        private Image WALLE;
         public CanvasForm(CanvasData canvasData)
         {
             InitializeComponent();
@@ -23,6 +24,7 @@ namespace Segundo_Proyecto1._0
             this.Resize += (s, e) => Invalidate();
             this.Text = "Canvas ampliado";
             this.WindowState = FormWindowState.Maximized;
+            WALLE=Image.FromFile("IMG/WALL-E1.png");
         }
 
         private void CanvasForm_Paint(object sender, PaintEventArgs e)
@@ -39,6 +41,20 @@ namespace Segundo_Proyecto1._0
                     }
                 }
             }
+
+            if(canvasData.WallE_X!=null){
+            int drawX = canvasData.WallE_X * cellSize;
+        int drawY = canvasData.WallE_Y * cellSize;
+        
+        // Dibujar la imagen ocupando toda la celda
+        e.Graphics.DrawImage(
+            WALLE,
+            drawX,
+            drawY,
+            cellSize,
+            cellSize
+        );
+        }
         }
 
 

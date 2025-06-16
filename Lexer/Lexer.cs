@@ -18,6 +18,7 @@ class Lexer
         {"DrawLine", TokenType.KEYWORD},
         {"DrawCircle", TokenType.KEYWORD},
         {"DrawRectangle", TokenType.KEYWORD},
+        {"Size", TokenType.KEYWORD},
         {"Fill", TokenType.KEYWORD},
         {"GoTo", TokenType.KEYWORD},
         {"Label", TokenType.KEYWORD},

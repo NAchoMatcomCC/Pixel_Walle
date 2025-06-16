@@ -10,5 +10,7 @@ public interface INodeVisitor
     void Visit(AssignmentStmt node);
     void Visit(Label node);
     void Visit(GoTo node);
+
+    
     // Agrega más nodos según sea necesario
 }
