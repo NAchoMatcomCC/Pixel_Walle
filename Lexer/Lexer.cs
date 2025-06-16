@@ -22,7 +22,7 @@ class Lexer
         {"Fill", TokenType.KEYWORD},
         {"GoTo", TokenType.KEYWORD},
         {"Label", TokenType.KEYWORD},
-        {"GetActualX", TokenType.KEYWORD},
+        {"GetActualX", TokenType.IDENTIFIER},
         {"GetActualY", TokenType.KEYWORD},
         {"GetCanvasSize", TokenType.KEYWORD},
         {"GetColorCount", TokenType.KEYWORD},

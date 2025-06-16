@@ -120,6 +120,8 @@ public class Parser
                 
             case "GoTo":
                 return ParseGoTo(keyword);
+            case "GetActualX":
+        
                 
             default:
                 Errors.Add(new CompilingError(keyword.Line, ErrorCode.Invalid, 

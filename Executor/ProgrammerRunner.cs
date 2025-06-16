@@ -39,7 +39,7 @@ public class ProgramRunner
 
             if (node is GoTo jump)
             {
-                int result = interpreter.Evaluate(jump.Condition);
+                int result = (int)interpreter.Evaluate(jump.Condition);
                 if (result != 0)
                 {
                     if (!labelMap.TryGetValue(jump.LabelName, out int targetIndex))
