@@ -22,7 +22,7 @@ class Lexer
         {"Fill", TokenType.KEYWORD},
         {"GoTo", TokenType.KEYWORD},
         {"Label", TokenType.KEYWORD},
-        {"GetActualX", TokenType.IDENTIFIER},
+        {"GetActualX", TokenType.KEYWORD},
         {"GetActualY", TokenType.KEYWORD},
         {"GetCanvasSize", TokenType.KEYWORD},
         {"GetColorCount", TokenType.KEYWORD},
@@ -132,7 +132,7 @@ class Lexer
     }
 
     private bool IsDigit(char c) => c >= '0' && c <= '9';
-    private bool IsAlpha(char c) => (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c == '-' && current != start + 1);
+    private bool IsAlpha(char c) => (c >= 'a' && c <= 'z') || (c >= 'A' && c <= 'Z') || (c == '_' && current != start + 1);
     private bool IsAlphaNumeric(char c) => IsAlpha(c) || IsDigit(c);
     private char Peek() => IsAtEnd() ? '\0' : source[current];
 }

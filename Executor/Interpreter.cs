@@ -304,11 +304,18 @@ private void Swap(ref int a, ref int b)
 
 
 
-    public object Evaluate(Expr expr)
+    public object  Evaluate(Expr expr)
 {
     return expr switch
     {
+        GetActualX x=>canvas.WallE_X,
+        GetActualY y=>canvas.WallE_X,
         Literal lit => lit.Value,
+        GetCanvasSize z=>canvas.Size,
+        IsBrushColor w=> currentColor==w.ColorExpression.ToString()? 1:0,
+        IsBrushSize r=>currentSize==Int32.Parse(r.SizeValue.ToString()),
+        IsCanvasColor m=>EvaluateIsCanvasColor(m),
+        GetColorCount n=>EvaluateGetColorCount(n),
         Var v => variables.ContainsKey(v.Name) ? variables[v.Name] : 0,
         AddExpr add => (int)Evaluate(add.Left) + (int)Evaluate(add.Right),
         SubtractExpr sub => (int)Evaluate(sub.Left) - (int)Evaluate(sub.Right),
@@ -337,7 +344,7 @@ private void Swap(ref int a, ref int b)
         Grouping group => Evaluate(group.Expression),
         
         // Llamadas a función
-        FunctionCall call => EvaluateFunction(call),
+        //FunctionCall call => EvaluateFunction(call),
         
         _ => throw new Exception($"Expresión no soportada: {expr.GetType().Name}")
     };
@@ -355,31 +362,23 @@ private void Swap(ref int a, ref int b)
             
         case "GetCanvasSize":
             return canvas.Size;
-            
-        case "GetColorCount":
-            return EvaluateGetColorCount(call);
-            
         case "IsBrushColor":
             return EvaluateIsBrushColor(call);
             
         case "IsBrushSize":
             return EvaluateIsBrushSize(call);
-            
-        case "IsCanvasColor":
-            return EvaluateIsCanvasColor(call);
-            
         default:
             throw new Exception($"Función desconocida: {call.FunctionName}");
     }
 }
 
-private int EvaluateGetColorCount(FunctionCall call)
+private int EvaluateGetColorCount(GetColorCount color)
 {
-    string colorName = (string)Evaluate(call.Arguments[0]);
-    int x1 = (int)Evaluate(call.Arguments[1]);
-    int y1 = (int)Evaluate(call.Arguments[2]);
-    int x2 = (int)Evaluate(call.Arguments[3]);
-    int y2 = (int)Evaluate(call.Arguments[4]);
+    string colorName = (string)Evaluate(color.ColorExpression);
+    int x1 = (int)Evaluate(color.DirX1);
+    int y1 = (int)Evaluate(color.DirY1);
+    int x2 = (int)Evaluate(color.DirX2);
+    int y2 = (int)Evaluate(color.DirY2);
 
     // Validar coordenadas
     if (x1 < 0 || y1 < 0 || x2 < 0 || y2 < 0 ||
@@ -423,11 +422,11 @@ private int EvaluateIsBrushSize(FunctionCall call)
     return currentSize == size ? 1 : 0;
 }
 
-private int EvaluateIsCanvasColor(FunctionCall call)
+private int EvaluateIsCanvasColor(IsCanvasColor color)
 {
-    string colorName = (string)Evaluate(call.Arguments[0]);
-    int vertical = (int)Evaluate(call.Arguments[1]);
-    int horizontal = (int)Evaluate(call.Arguments[2]);
+    string colorName = (string)Evaluate(color.ColorExpression);
+    int vertical = (int)Evaluate(color.DirX);
+    int horizontal = (int)Evaluate(color.DirY);
 
     int targetX = posX + horizontal;
     int targetY = posY + vertical;

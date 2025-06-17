@@ -14,11 +14,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Universidad\\MATCOM\\Programación\\2do_proyecto\\Segundo_Proyecto1.0\\Segundo_Proyecto1.0.csproj",
+      "projectUniqueName": "D:\\Universidad\\MATCOM\\Programación\\2do_proyecto\\Segundo_Proyecto\\Segundo_Proyecto1.0.csproj",
       "projectName": "Segundo_Proyecto1.0",
-      "projectPath": "D:\\Universidad\\MATCOM\\Programación\\2do_proyecto\\Segundo_Proyecto1.0\\Segundo_Proyecto1.0.csproj",
+      "projectPath": "D:\\Universidad\\MATCOM\\Programación\\2do_proyecto\\Segundo_Proyecto\\Segundo_Proyecto1.0.csproj",
       "packagesPath": "C:\\Users\\05ign\\.nuget\\packages\\",
-      "outputPath": "D:\\Universidad\\MATCOM\\Programación\\2do_proyecto\\Segundo_Proyecto1.0\\obj\\",
+      "outputPath": "D:\\Universidad\\MATCOM\\Programación\\2do_proyecto\\Segundo_Proyecto\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"

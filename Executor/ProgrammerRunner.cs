@@ -39,15 +39,15 @@ public class ProgramRunner
 
             if (node is GoTo jump)
             {
-                int result = (int)interpreter.Evaluate(jump.Condition);
-                if (result != 0)
+                object result = interpreter.Evaluate(jump.Condition);
+
+                if (result is int n && n != 0)
                 {
                     if (!labelMap.TryGetValue(jump.LabelName, out int targetIndex))
-                        throw new Exception($"Label '{jump.LabelName}' not found.");
+                    throw new Exception($"Label '{jump.LabelName}' not found.");
 
-                    pc = targetIndex - 1; // porque el for hace pc++
+                    pc = targetIndex - 1;
                 }
-                continue;
             }
 
             node.Accept(interpreter);

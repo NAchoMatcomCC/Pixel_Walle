@@ -120,7 +120,7 @@ public class Parser
                 
             case "GoTo":
                 return ParseGoTo(keyword);
-            case "GetActualX":
+            
         
                 
             default:
@@ -129,6 +129,78 @@ public class Parser
                 throw new ParseException($"Instrucción desconocida: {keyword.Lexeme}");
         }
     }
+
+    private Expr ParseGetActualX(Token keyword)
+    {
+        Eat(TokenType.LEFT_PAREN);
+        Eat(TokenType.RIGHT_PAREN);
+
+        return new GetActualX(keyword);
+    }
+
+    private Expr ParseGetActualY(Token keyword)
+    {
+        Eat(TokenType.LEFT_PAREN);
+        Eat(TokenType.RIGHT_PAREN);
+
+        return new GetActualY(keyword);
+    }
+
+    private Expr ParseGetCanvasSize(Token keyword)
+    {
+        Eat(TokenType.LEFT_PAREN);
+        Eat(TokenType.RIGHT_PAREN);
+
+        return new GetCanvasSize(keyword);
+    }
+
+    private Expr ParseIsBrushColor(Token keyword)
+    {
+        Eat(TokenType.LEFT_PAREN);
+        Expr color = ParseExpression();
+        Eat(TokenType.RIGHT_PAREN);
+        return new IsBrushColor(keyword, color);
+    }
+
+    private Expr ParseIsBrushSize(Token keyword)
+    {
+        Eat(TokenType.LEFT_PAREN);
+        Expr number= ParseExpression();
+        Eat(TokenType.RIGHT_PAREN);
+        return new IsBrushSize(keyword, number);
+    }
+
+    private Expr ParseIsCanvasColor(Token keyword)
+    {
+        Eat(TokenType.LEFT_PAREN);
+        Expr color= ParseExpression();
+        Eat(TokenType.COMMA);
+        Expr dirx= ParseExpression();
+        Eat(TokenType.COMMA);
+        Expr diry= ParseExpression();
+        Eat(TokenType.RIGHT_PAREN);
+        return new IsCanvasColor(keyword, color, dirx, diry);
+    }
+
+    private Expr ParseGetColorCount(Token keyword)
+    {
+        Eat(TokenType.LEFT_PAREN);
+        Expr color= ParseExpression();
+        Eat(TokenType.COMMA);
+        Expr dirx1= ParseExpression();
+        Eat(TokenType.COMMA);
+        Expr diry1= ParseExpression();
+        Eat(TokenType.COMMA);
+        Expr dirx2= ParseExpression();
+        Eat(TokenType.COMMA);
+        Expr diry2= ParseExpression();
+        Eat(TokenType.RIGHT_PAREN);
+        return new GetColorCount(keyword, color, dirx1, diry1, dirx2, diry2);
+    }
+
+
+
+
 
     private Stmt ParseSpawn(Token keyword)
     {
@@ -148,6 +220,8 @@ public class Parser
         context.SpawnCalled = true;
         return new SpawnStmt(keyword, x, y);
     }
+
+
 
     private Stmt ParseColor(Token keyword)
     {
@@ -232,7 +306,25 @@ public class Parser
         if (currentToken.Type == TokenType.ASSIGNMENT)
         {
             Eat(TokenType.ASSIGNMENT);
-            Expr expr = ParseExpression();
+
+            Expr expr;
+            
+            if(currentToken.Type==TokenType.KEYWORD)
+            {
+                Token aux=currentToken;
+                Eat(TokenType.KEYWORD);
+                if(aux.Lexeme=="GetActualX") expr=ParseGetActualX(aux);
+                else if(aux.Lexeme=="GetActualY") expr=ParseGetActualY(aux);
+                else if(aux.Lexeme=="GetCanvasSize") expr=ParseGetCanvasSize(aux);
+                else if(aux.Lexeme=="IsBrushColor") expr=ParseIsBrushColor(aux);
+                else if(aux.Lexeme=="IsBrushSize") expr=ParseIsBrushSize(aux);
+                else if(aux.Lexeme=="IsCanvasColor") expr=ParseIsCanvasColor(aux);
+                else if(aux.Lexeme=="GetColorCount") expr=ParseGetColorCount(aux);
+                else
+                  throw new Exception("No se reconoce esa funci'on");
+
+            }
+            else expr = ParseExpression();
             return new AssignmentStmt(identifier, expr);
         }
         else
@@ -342,7 +434,7 @@ private Expr ParseFactor()
     Expr expr = ParseUnary();
 
     while (currentToken.Type == TokenType.STAR || currentToken.Type == TokenType.SLASH || 
-           currentToken.Type == TokenType.PERCENT)
+           currentToken.Type == TokenType.PERCENT || currentToken.Type == TokenType.CARET)
     {
         Token op = currentToken;
         Eat(currentToken.Type);
@@ -353,6 +445,7 @@ private Expr ParseFactor()
             TokenType.STAR => new MultiplyExpr(expr, op, right),
             TokenType.SLASH => new DivideExpr(expr, op, right),
             TokenType.PERCENT => new ModuloExpr(expr, op, right),
+            TokenType.CARET => new PowerExpr(expr, op, right),
             _ => expr
         };
     }
