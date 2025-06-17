@@ -50,11 +50,11 @@ Este fragmento dibuja una línea cinco veces desplazándose horizontalmente.
 ## 🖥️ Sobre la interfaz:
 
 - El editor de código admite scroll, zoom con Ctrl+Rueda.
-![Imagen] (IMG/Pixel_WALL-E-IDE.png)
+![Imagen](IMG/Pixel_WALL-E-IDE.png)
 - El lienzo es un área de dibujo pixelado. Al hacer clic sobre él, se puede abrir una vista ampliada.
-![Imagen] (IMG/Canvas_Ampliado.png)
+![Imagen](IMG/Canvas_Ampliado.png)
 - El botón para redimensionar el canvas permite elegir nuevos tamaños.
-![Imagen] (IMG/Botones.png)
+![Imagen](IMG/Botones.png)
 
 
 
