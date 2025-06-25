@@ -1,7 +1,7 @@
 public class GreaterEqualExpr : BinaryExpr
 {
-    public GreaterEqualExpr(Expr left, Token opToken, Expr right)
-        : base(left, opToken, right) { }
+    public GreaterEqualExpr(Expr left, Token opToken, Expr right, List<CompilingError> CompilingErrors)
+        : base(left, opToken, right, CompilingErrors) { }
 
     
 
@@ -14,7 +14,8 @@ public class GreaterEqualExpr : BinaryExpr
         Right.CheckSemantics(context);
 
         if (!Left.IsNumeric(context) || !Right.IsNumeric(context))
-            throw new Exception("Comparison operands must be numeric.");
+            CompilingErrors.Add(new CompilingError(Operator.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
+        $"La comparación debe ser entre números"));
     }
 
     public override string ToString() => $"({Left} >= {Right})";

@@ -3,8 +3,8 @@ public class AssignmentStmt : Stmt
         public string VariableName { get; }
         public Expr Expression { get; }
 
-        public AssignmentStmt(Token identifier, Expr expression) 
-            : base(identifier)
+        public AssignmentStmt(Token identifier, Expr expression, List<CompilingError> CompilingErrors) 
+            : base(identifier, CompilingErrors)
         {
             VariableName = identifier.Lexeme;
             Expression = expression;
@@ -21,7 +21,8 @@ public class AssignmentStmt : Stmt
             Expression.CheckSemantics(context);
     
             if (!IsValidVariableName(VariableName))
-                throw new Exception($"Invalid variable name: {VariableName}");
+                CompilingErrors.Add(new CompilingError(StartToken.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
+        $"Nombre de variable {VariableName} inv'alido"));
     
             context.DefineVariable(VariableName, Expression.IsNumeric(context));
         }

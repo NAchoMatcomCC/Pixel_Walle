@@ -4,8 +4,8 @@
         public Token Operator { get; }
         public Expr Right { get; }
 
-        public BinaryExpr(Expr left, Token op, Expr right) 
-            : base(left.StartToken)
+        public BinaryExpr(Expr left, Token op, Expr right, List<CompilingError> CompilingErrors) 
+            : base(left.StartToken, CompilingErrors)
         {
             Left = left;
             Operator = op;

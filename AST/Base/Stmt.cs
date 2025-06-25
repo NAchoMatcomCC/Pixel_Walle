@@ -1,6 +1,6 @@
 public abstract class Stmt : ASTNode
     {
-        protected Stmt(Token startToken) : base(startToken) { }
+        protected Stmt(Token startToken, List<CompilingError> CompilingErrors) : base(startToken, CompilingErrors) { }
 
         
     }

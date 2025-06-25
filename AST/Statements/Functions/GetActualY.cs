@@ -2,8 +2,8 @@ public class GetActualY : Expr
     {
         public Expr SizeValue { get; }
 
-        public GetActualY(Token sizeToken) 
-            : base(sizeToken)
+        public GetActualY(Token sizeToken, List<CompilingError> CompilingErrors) 
+            : base(sizeToken, CompilingErrors)
         {
             
         }

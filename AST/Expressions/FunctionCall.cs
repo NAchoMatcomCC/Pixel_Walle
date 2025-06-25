@@ -3,8 +3,8 @@ public class FunctionCall : Expr
     public string FunctionName { get; }
     public List<Expr> Arguments { get; }
 
-    public FunctionCall(string functionName, List<Expr> arguments, Token token) 
-        : base(token)
+    public FunctionCall(string functionName, List<Expr> arguments, Token token, List<CompilingError> CompilingErrors) 
+        : base(token, CompilingErrors)
     {
         FunctionName = functionName;
         Arguments = arguments;

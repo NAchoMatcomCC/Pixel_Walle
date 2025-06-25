@@ -4,8 +4,8 @@ public class DrawLineStmt : Stmt
         public Expr DirY { get; }
         public Expr Distance { get; }
 
-        public DrawLineStmt(Token drawToken, Expr dirX, Expr dirY, Expr distance) 
-            : base(drawToken)
+        public DrawLineStmt(Token drawToken, Expr dirX, Expr dirY, Expr distance, List<CompilingError> CompilingErrors) 
+            : base(drawToken, CompilingErrors)
         {
             DirX = dirX;
             DirY = dirY;
@@ -23,7 +23,8 @@ public class DrawLineStmt : Stmt
         Distance.CheckSemantics(context);
 
         if (!DirX.IsNumeric(context) || !DirY.IsNumeric(context) || !Distance.IsNumeric(context))
-            throw new Exception("DrawLine expects numeric arguments.");
+            CompilingErrors.Add(new CompilingError(StartToken.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
+        $"DrawLine espera argumentos num'ericos"));
     }
 
     public override void Accept(INodeVisitor visitor) => visitor.Visit(this);

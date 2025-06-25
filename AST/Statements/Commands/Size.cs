@@ -2,8 +2,8 @@ public class SizeStmt : Stmt
     {
         public Expr SizeValue { get; }
 
-        public SizeStmt(Token sizeToken, Expr sizeValue) 
-            : base(sizeToken)
+        public SizeStmt(Token sizeToken, Expr sizeValue, List<CompilingError> CompilingErrors) 
+            : base(sizeToken, CompilingErrors)
         {
             SizeValue = sizeValue;
         }
@@ -15,7 +15,8 @@ public class SizeStmt : Stmt
             SizeValue.CheckSemantics(context);
 
             if (!SizeValue.IsNumeric(context))
-                throw new Exception("Size expects a numeric argument.");
+                CompilingErrors.Add(new CompilingError(StartToken.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
+        $"Size espera un argumento num'erico"));
         }
 
 

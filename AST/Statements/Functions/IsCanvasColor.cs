@@ -9,8 +9,8 @@ public class IsCanvasColor : Expr
         "Red", "Blue", "Green", "Yellow", "Orange",
         "Purple", "Black", "White", "Transparent"
     };
-        public IsCanvasColor(Token colorToken, Expr colorExpression, Expr dirx, Expr diry) 
-        : base(colorToken)
+        public IsCanvasColor(Token colorToken, Expr colorExpression, Expr dirx, Expr diry, List<CompilingError> CompilingErrors) 
+        : base(colorToken, CompilingErrors)
     {
         DirX=dirx;
         DirY=diry;
@@ -24,13 +24,15 @@ public class IsCanvasColor : Expr
         ColorExpression.CheckSemantics(context);
 
         if (!DirX.IsNumeric(context) || !DirY.IsNumeric(context))
-            throw new Exception("IsCanvasColor expects numeric arguments.");
+           CompilingErrors.Add(new CompilingError(StartToken.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
+        $"IsCanvasColor espera 2 argumentos num'ericos"));
         
         // Check if it's a string literal
         if (ColorExpression is Literal literal && literal.Value is string colorValue)
         {
             if (!AllowedColors.Contains(colorValue))
-                throw new Exception($"Color '{colorValue}' no válido");
+                CompilingErrors.Add(new CompilingError(StartToken.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
+        $"Color {colorValue} no v'alido"));
         }
         // Else: runtime check will be needed
     }

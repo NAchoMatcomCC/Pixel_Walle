@@ -9,7 +9,7 @@
 
 1. Ejecutar el proyecto desde Visual Studio o mediante el comando `dotnet run` desde la carpeta principal del proyecto.
 2. Se abrirá una ventana con un editor de texto, un área de dibujo (canvas) y botones para ejecutar y cargar código.
-3. Escribir instrucciones en el editor siguiendo la sintaxis del lenguaje Pixel Wall-E (ver ejemplos abajo).
+3. Escribir instrucciones en el editor siguiendo la sintaxis del lenguaje Pixel Wall-E.
 4. Presionar el botón **"Ejecutar"** para compilar e interpretar el código.
 5. El resultado será visible en el **canvas**, donde cada píxel representa una acción gráfica de Wall-E.
 6. Se puede cambiar el tamaño del lienzo, limpiar el área o volver a cargar archivos `.pw` desde el mismo entorno.

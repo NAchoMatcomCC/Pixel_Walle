@@ -1,8 +1,10 @@
 {
   "version": 2,
-  "dgSpecHash": "tmyg1AAEyq4=",
+  "dgSpecHash": "xdxb2udPETU=",
   "success": true,
-  "projectFilePath": "D:\\Universidad\\MATCOM\\Programación\\2do_proyecto\\Segundo_Proyecto\\Segundo_Proyecto1.0.csproj",
-  "expectedPackageFiles": [],
+  "projectFilePath": "D:\\Universidad\\MATCOM\\Programación\\2do_proyecto\\Segundo_Proyecto1.0\\Segundo_Proyecto1.0.csproj",
+  "expectedPackageFiles": [
+    "C:\\Users\\05ign\\.nuget\\packages\\scintilla5.net\\6.0.1\\scintilla5.net.6.0.1.nupkg.sha512"
+  ],
   "logs": []
 }

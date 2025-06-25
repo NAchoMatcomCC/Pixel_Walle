@@ -1,11 +1,84 @@
 {
   "version": 3,
   "targets": {
-    "net8.0-windows7.0": {}
+    "net8.0-windows7.0": {
+      "Scintilla5.NET/6.0.1": {
+        "type": "package",
+        "compile": {
+          "lib/net6.0-windows7.0/Scintilla.NET.dll": {
+            "related": ".xml"
+          }
+        },
+        "runtime": {
+          "lib/net6.0-windows7.0/Scintilla.NET.dll": {
+            "related": ".xml"
+          }
+        },
+        "frameworkReferences": [
+          "Microsoft.WindowsDesktop.App.WindowsForms"
+        ],
+        "build": {
+          "build/scintilla5.net.targets": {}
+        },
+        "runtimeTargets": {
+          "runtimes/win-arm64/native/Lexilla.dll": {
+            "assetType": "native",
+            "rid": "win-arm64"
+          },
+          "runtimes/win-arm64/native/Scintilla.dll": {
+            "assetType": "native",
+            "rid": "win-arm64"
+          },
+          "runtimes/win-x64/native/Lexilla.dll": {
+            "assetType": "native",
+            "rid": "win-x64"
+          },
+          "runtimes/win-x64/native/Scintilla.dll": {
+            "assetType": "native",
+            "rid": "win-x64"
+          },
+          "runtimes/win-x86/native/Lexilla.dll": {
+            "assetType": "native",
+            "rid": "win-x86"
+          },
+          "runtimes/win-x86/native/Scintilla.dll": {
+            "assetType": "native",
+            "rid": "win-x86"
+          }
+        }
+      }
+    }
   },
-  "libraries": {},
+  "libraries": {
+    "Scintilla5.NET/6.0.1": {
+      "sha512": "fncV8jc9NH7fjU62zDFkTWwZXGT5VRfLPYQup3mf4UEAiTvhPozwaxW2oloUtRbA3RHDEfHJi9LR13VQxSmOkA==",
+      "type": "package",
+      "path": "scintilla5.net/6.0.1",
+      "files": [
+        ".nupkg.metadata",
+        ".signature.p7s",
+        "README.md",
+        "build/scintilla5.net.targets",
+        "icon.png",
+        "lib/net462/Scintilla.NET.dll",
+        "lib/net462/Scintilla.NET.xml",
+        "lib/net6.0-windows7.0/Scintilla.NET.dll",
+        "lib/net6.0-windows7.0/Scintilla.NET.xml",
+        "runtimes/win-arm64/native/Lexilla.dll",
+        "runtimes/win-arm64/native/Scintilla.dll",
+        "runtimes/win-x64/native/Lexilla.dll",
+        "runtimes/win-x64/native/Scintilla.dll",
+        "runtimes/win-x86/native/Lexilla.dll",
+        "runtimes/win-x86/native/Scintilla.dll",
+        "scintilla5.net.6.0.1.nupkg.sha512",
+        "scintilla5.net.nuspec"
+      ]
+    }
+  },
   "projectFileDependencyGroups": {
-    "net8.0-windows7.0": []
+    "net8.0-windows7.0": [
+      "Scintilla5.NET >= 6.0.1"
+    ]
   },
   "packageFolders": {
     "C:\\Users\\05ign\\.nuget\\packages\\": {},
@@ -14,11 +87,11 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "D:\\Universidad\\MATCOM\\Programación\\2do_proyecto\\Segundo_Proyecto\\Segundo_Proyecto1.0.csproj",
+      "projectUniqueName": "D:\\Universidad\\MATCOM\\Programación\\2do_proyecto\\Segundo_Proyecto1.0\\Segundo_Proyecto1.0.csproj",
       "projectName": "Segundo_Proyecto1.0",
-      "projectPath": "D:\\Universidad\\MATCOM\\Programación\\2do_proyecto\\Segundo_Proyecto\\Segundo_Proyecto1.0.csproj",
+      "projectPath": "D:\\Universidad\\MATCOM\\Programación\\2do_proyecto\\Segundo_Proyecto1.0\\Segundo_Proyecto1.0.csproj",
       "packagesPath": "C:\\Users\\05ign\\.nuget\\packages\\",
-      "outputPath": "D:\\Universidad\\MATCOM\\Programación\\2do_proyecto\\Segundo_Proyecto\\obj\\",
+      "outputPath": "D:\\Universidad\\MATCOM\\Programación\\2do_proyecto\\Segundo_Proyecto1.0\\obj\\",
       "projectStyle": "PackageReference",
       "fallbackFolders": [
         "C:\\Program Files (x86)\\Microsoft Visual Studio\\Shared\\NuGetPackages"
@@ -56,6 +129,12 @@
     "frameworks": {
       "net8.0-windows7.0": {
         "targetAlias": "net8.0-windows",
+        "dependencies": {
+          "Scintilla5.NET": {
+            "target": "Package",
+            "version": "[6.0.1, )"
+          }
+        },
         "imports": [
           "net461",
           "net462",

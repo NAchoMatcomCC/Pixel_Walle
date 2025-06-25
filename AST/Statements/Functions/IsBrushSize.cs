@@ -2,8 +2,8 @@ public class IsBrushSize : Expr
     {
         public Expr SizeValue { get; }
 
-        public IsBrushSize(Token sizeToken, Expr sizeValue) 
-            : base(sizeToken)
+        public IsBrushSize(Token sizeToken, Expr sizeValue, List<CompilingError> CompilingErrors) 
+            : base(sizeToken, CompilingErrors)
         {
             SizeValue = sizeValue;
         }
@@ -15,7 +15,8 @@ public class IsBrushSize : Expr
             SizeValue.CheckSemantics(context);
 
             if (!SizeValue.IsNumeric(context))
-                throw new Exception("Size expects a numeric argument.");
+                CompilingErrors.Add(new CompilingError(StartToken.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
+        $"IsBrushSize espera un argumento num'erico"));
         }
 
         public override bool IsNumeric(SemanticContext context) => false;

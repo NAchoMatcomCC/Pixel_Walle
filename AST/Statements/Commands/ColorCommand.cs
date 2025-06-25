@@ -8,8 +8,8 @@ public class ColorCommand : Stmt
         "Purple", "Black", "White", "Transparent"
     };
 
-    public ColorCommand(Token colorToken, Expr colorExpression) 
-        : base(colorToken)
+    public ColorCommand(Token colorToken, Expr colorExpression, List<CompilingError> CompilingErrors) 
+        : base(colorToken, CompilingErrors)
     {
         ColorExpression = colorExpression;
     }
@@ -22,7 +22,8 @@ public class ColorCommand : Stmt
         if (ColorExpression is Literal literal && literal.Value is string colorValue)
         {
             if (!AllowedColors.Contains(colorValue))
-                throw new Exception($"Color '{colorValue}' no válido");
+                CompilingErrors.Add(new CompilingError(StartToken.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
+        $"Color no v'alido"));
         }
         // Else: runtime check will be needed
     }

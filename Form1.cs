@@ -3,11 +3,16 @@ using System.Drawing;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Microsoft.VisualBasic;
+using System.Text.RegularExpressions;
 
 namespace Segundo_Proyecto1._0
 {
     public partial class MainForm : Form
     {
+        string[] keywords = {
+        "Spawn", "Color", "Size", "DrawLine", "DrawCircle", "DrawRectangle",
+        "Fill", "GoTo", "GetActualX", "GetActualY", "IsBrushSize", "IsCanvasColor", "IsBrushColor", "GetCanvasSize",
+        };
         private Image WALLE;
         public MainForm()
         {
@@ -36,14 +41,64 @@ namespace Segundo_Proyecto1._0
 
             // Evento para zoom con Ctrl+Rueda
             codeEditor.MouseWheel += CodeEditor_MouseWheel!;
-        }
 
+            codeEditor.TextChanged += codeEditor_TextChanged;
+
+
+        }
+        
         // Habilitar doble búfer para reducir parpadeo
         public static void SetDoubleBuffered(Control control, bool enabled)
         {
             var prop = typeof(Control).GetProperty("DoubleBuffered",
                 System.Reflection.BindingFlags.Instance | System.Reflection.BindingFlags.NonPublic);
             prop?.SetValue(control, enabled, null);
+        }
+
+        private void codeEditor_TextChanged(object sender, EventArgs e)
+        {
+           HighlightSyntax();
+        }
+
+        private void HighlightSyntax()
+        {
+            int selStart = codeEditor.SelectionStart;
+            int selLength = codeEditor.SelectionLength;
+
+            codeEditor.SuspendLayout();
+            codeEditor.SelectionStart = 0;
+            codeEditor.SelectionLength = codeEditor.Text.Length;
+            codeEditor.SelectionColor = Color.Black;
+            codeEditor.SelectionFont = new Font("Consolas", 10, FontStyle.Regular);
+
+            foreach (string keyword in keywords)
+            {
+                foreach (Match m in Regex.Matches(codeEditor.Text, $@"\b{Regex.Escape(keyword)}\b"))
+                {
+                    codeEditor.Select(m.Index, m.Length);
+                    codeEditor.SelectionColor = Color.Blue;
+                    codeEditor.SelectionFont = new Font("Consolas", 10, FontStyle.Bold);
+                }
+            }
+
+            foreach (Match m in Regex.Matches(codeEditor.Text, "\".*?\""))
+            {
+                codeEditor.Select(m.Index, m.Length);
+                codeEditor.SelectionColor = Color.Brown;
+            }
+
+            foreach (Match m in Regex.Matches(codeEditor.Text, @"\b\d+\b"))
+            {
+                codeEditor.Select(m.Index, m.Length);
+                codeEditor.SelectionColor = Color.DarkOrange;
+            }
+
+            codeEditor.SelectionStart = selStart;
+            codeEditor.SelectionLength = selLength;
+            codeEditor.SelectionColor = Color.Black;
+            codeEditor.ResumeLayout();
+
+
         }
 
 
@@ -307,73 +362,55 @@ namespace Segundo_Proyecto1._0
 
         private void button3_Click(object sender, EventArgs e)
         {
-            try
+            List<CompilingError> errors = new(); // Centralizar errores
+
+    try
     {
-        // Limpiar el canvas (opcional, dependiendo de tus requisitos)
-        canvasData.Clear(Color.White);
-        
         var source = codeEditor.Text;
-        var scanner = new Lexer(source);
+        var scanner = new Lexer(source, errors);
         var tokens = scanner.ScanTokens();
-        
-        var parser = new Parser(tokens);
+
+        var parser = new Parser(tokens, errors);
         List<Stmt> program = parser.Parse();
-        List<ASTNode> astNodes = program.Cast<ASTNode>().ToList();
-        // Verificar errores de compilación
-        if (parser.Errors.Count > 0)
+        SemanticContext context=new SemanticContext();
+        for (int i = 0; i < program.Count; i++)
         {
-            MessageBox.Show("Errores de compilación:\n" + 
-                string.Join("\n", parser.Errors.Select(e => $"[Línea {e.Line}] {e.Argument}")), 
-                "Errores", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            return;
+            program[i].CheckSemantics(context);
+        }
+        List<ASTNode> astNodes = program.Cast<ASTNode>().ToList();
+
+        // Ejecutar solo si no hay errores previos
+        if (errors.Count == 0)
+        {
+            var runner = new ProgramRunner(astNodes, canvasData, errors);
+            runner.Run();
+            canvas_Panel.Invalidate();
         }
 
-        var runner = new ProgramRunner(astNodes, canvasData);
-        runner.Run();
-        
-        canvas_Panel.Invalidate(); // Redibujar el canvas
-        
-        MessageBox.Show("Ejecución completada exitosamente!", "Éxito", 
-            MessageBoxButtons.OK, MessageBoxIcon.Information);
+        // Mostrar el primer error si ocurrió alguno
+        if (errors.Count > 0)
+        {
+            var first = errors[0];
+            MessageBox.Show($"[Línea {first.Line}] {first.Stage}: {first.Argument}",
+                            "Error encontrado",
+                            MessageBoxButtons.OK,
+                            MessageBoxIcon.Warning);
+        }
+        else
+        {
+            canvas_Panel.Invalidate(); // Redibujar el canvas si todo fue bien
+            MessageBox.Show("Ejecución completada exitosamente!", "Éxito",
+                            MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
     }
     catch (Exception ex)
     {
-        MessageBox.Show("Error durante la ejecución:\n" + ex.Message, "Error", 
-            MessageBoxButtons.OK, MessageBoxIcon.Error);
+        MessageBox.Show("Error inesperado durante la ejecución:\n" + ex.Message,
+                        "Error",
+                        MessageBoxButtons.OK,
+                        MessageBoxIcon.Error);
     }
         }
-
-        // Agregar un método de prueba para simular el flujo de ejecución
-        /*private void TestSpawnExecution()
-        {
-            try
-            {
-                string testCode = "Spawn(0, 0)\nColor(\"Red\")\nDrawLine(1, 0, 5)";
-                var scanner = new Lexer(testCode);
-                var tokens = scanner.ScanTokens();
-                var stream = new TokenStream(tokens);
-
-                var parser = new PixelParser(stream);
-                var errors = new List<CompilingError>();
-                var program = parser.ParseProgram(errors);
-
-                if (errors.Count > 0)
-                {
-                    MessageBox.Show("Errores de compilación:\n" + string.Join("\n", errors.Select(e => $"Línea {e.Line}: {e.Argument}")), "Errores", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-
-                var runner = new ProgramRunner(program, canvasData);
-                runner.Run();
-                canvas_Panel.Invalidate(); // Redibujar
-
-                MessageBox.Show("Ejecución completada exitosamente.", "Éxito", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Error durante la ejecución:\n" + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }*/
     }
 }
 

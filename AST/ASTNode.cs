@@ -2,9 +2,13 @@ public abstract class ASTNode
     {
         public Token StartToken { get; }
 
-        protected ASTNode(Token startToken)
+        public List<CompilingError> CompilingErrors; 
+
+
+        protected ASTNode(Token startToken, List<CompilingError> compilingErrors)
         {
             StartToken = startToken;
+            CompilingErrors=compilingErrors;
         }
 
 

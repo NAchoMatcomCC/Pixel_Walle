@@ -1,6 +1,6 @@
 public class FillStmt : Stmt
     {
-        public FillStmt(Token fillToken) : base(fillToken) { }
+        public FillStmt(Token fillToken, List<CompilingError> CompilingErrors) : base(fillToken, CompilingErrors) { }
 
 
        

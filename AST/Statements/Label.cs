@@ -2,7 +2,7 @@ public class Label : Stmt
 {
     public string Name { get; }
 
-    public Label(string name, Token starToken) : base(starToken)
+    public Label(string name, Token starToken, List<CompilingError> CompilingErrors) : base(starToken, CompilingErrors)
     {
         Name = name;
     }
@@ -10,10 +10,11 @@ public class Label : Stmt
     public override void CheckSemantics(SemanticContext context)
     {
         if (!IsValidLabelName(Name))
-            throw new Exception($"Invalid label name: '{Name}'");
-
+            CompilingErrors.Add(new CompilingError(StartToken.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
+        $"{Name} nombre inv'alido para etiqueta"));
         if (context.IsLabelDefined(Name))
-            throw new Exception($"Label '{Name}' is already defined.");
+            CompilingErrors.Add(new CompilingError(StartToken.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
+        $"Nombre de etiqueta ya defnido"));
 
         context.DefineLabel(Name);
     }

@@ -1,7 +1,7 @@
 public class PowerExpr : BinaryExpr
 {
-    public PowerExpr(Expr left, Token opToken, Expr right)
-        : base(left, opToken, right) { }
+    public PowerExpr(Expr left, Token opToken, Expr right, List<CompilingError> CompilingErrors)
+        : base(left, opToken, right, CompilingErrors) { }
 
     
 
@@ -14,7 +14,8 @@ public class PowerExpr : BinaryExpr
         Right.CheckSemantics(context);
 
         if (!Left.IsNumeric(context) || !Right.IsNumeric(context))
-            throw new Exception("Exponentiation operands must be numeric.");
+            CompilingErrors.Add(new CompilingError(Operator.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
+        $"Deben ser n'umeros"));
     }
 
     public override string ToString() => $"({Left} ** {Right})";

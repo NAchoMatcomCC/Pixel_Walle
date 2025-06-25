@@ -1,7 +1,7 @@
 public class AddExpr : BinaryExpr
 {
-    public AddExpr(Expr left, Token opToken, Expr right)
-        : base(left, opToken, right) { }
+    public AddExpr(Expr left, Token opToken, Expr right, List<CompilingError> CompilingErrors)
+        : base(left, opToken, right, CompilingErrors) { }
 
     
 
@@ -14,7 +14,8 @@ public class AddExpr : BinaryExpr
         Right.CheckSemantics(context);
 
         if (!Left.IsNumeric(context) || !Right.IsNumeric(context))
-            throw new Exception("Addition operands must be numeric.");
+        CompilingErrors.Add(new CompilingError(Operator.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
+        $"Se deben sumar números"));
     }
 
     public override string ToString() => $"({Left} + {Right})";

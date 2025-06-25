@@ -2,7 +2,7 @@ public class Grouping : Expr
 {
     public Expr Expression { get; }
 
-    public Grouping(Expr expr, Token startoken) : base(startoken)
+    public Grouping(Expr expr, Token startoken, List<CompilingError> CompilingErrors) : base(startoken, CompilingErrors)
     {
         Expression = expr;
     }

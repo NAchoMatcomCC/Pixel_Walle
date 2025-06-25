@@ -1,7 +1,7 @@
 public class NotEqualExpr : BinaryExpr
 {
-    public NotEqualExpr(Expr left, Token opToken, Expr right)
-        : base(left, opToken, right) { }
+    public NotEqualExpr(Expr left, Token opToken, Expr right, List<CompilingError> CompilingErrors)
+        : base(left, opToken, right, CompilingErrors) { }
 
    
 
@@ -16,7 +16,8 @@ public class NotEqualExpr : BinaryExpr
         if (Left.IsNumeric(context) != Right.IsNumeric(context) && 
             Left.IsBoolean(context) != Right.IsBoolean(context))
         {
-            throw new Exception("Cannot compare different types.");
+            CompilingErrors.Add(new CompilingError(Operator.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
+        $"No se debe operar con tipos diferentes"));
         }
     }
 

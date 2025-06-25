@@ -3,7 +3,7 @@ public class GoTo : Stmt
     public string LabelName { get; }
     public Expr Condition { get; }
 
-    public GoTo(string labelName, Expr condition, Token starToken) : base(starToken)
+    public GoTo(string labelName, Expr condition, Token starToken, List<CompilingError> CompilingErrors) : base(starToken, CompilingErrors)
     {
         LabelName = labelName;
         Condition = condition;
@@ -14,10 +14,12 @@ public class GoTo : Stmt
         Condition.CheckSemantics(context);
 
         if (!Condition.IsBoolean(context))
-            throw new Exception("The condition in GoTo must be a boolean expression.");
+            CompilingErrors.Add(new CompilingError(StartToken.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
+        $"La condici'on debe ser booleana"));
 
         if (!context.IsLabelDefined(LabelName))
-            throw new Exception($"Label '{LabelName}' used in GoTo is not defined.");
+            CompilingErrors.Add(new CompilingError(StartToken.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
+        $"La estiqueta {LabelName} no est'a definida"));
     }
 
     public override void Accept(INodeVisitor visitor) => visitor.Visit(this);

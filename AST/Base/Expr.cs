@@ -1,6 +1,6 @@
 public abstract class Expr : ASTNode
     {
-        protected Expr(Token startToken) : base(startToken) { }
+        public Expr(Token startToken, List<CompilingError> CompilingErrors) : base(startToken, CompilingErrors) { }
 
         public abstract bool IsNumeric(SemanticContext context);
 

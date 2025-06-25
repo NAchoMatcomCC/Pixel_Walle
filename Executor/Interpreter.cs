@@ -1,4 +1,5 @@
 using Segundo_Proyecto1._0;
+using System.CodeDom;
 using System.Drawing;
 
 public class Interpreter : INodeVisitor
@@ -9,10 +10,12 @@ public class Interpreter : INodeVisitor
     private string currentColor = "black";
     private int currentSize = 1;
     private readonly Dictionary<string, int> variables = new();
+    private List<CompilingError> CompilingErrors;
 
-    public Interpreter(CanvasData canvas)
+    public Interpreter(CanvasData canvas, List<CompilingError> compilingErrors)
     {
         this.canvas = canvas;
+        CompilingErrors=compilingErrors;
     }
 
     private static readonly Dictionary<string, Color> ColorMap = new()
@@ -44,7 +47,9 @@ public class Interpreter : INodeVisitor
     
     if (!ColorMap.TryGetValue(colorName, out Color color))
     {
-        throw new Exception($"Color desconocido: {colorName}");
+        CompilingErrors.Add(new CompilingError(node.StartToken.Line, ErrorCode.Invalid, ErrorStage.Runtime, $"Color {colorName} inv'alido"));
+        return; 
+        
     }
     
     currentColor = colorName;
@@ -76,7 +81,27 @@ public class Interpreter : INodeVisitor
             int targetY = centerY + dy;
             
             if (targetX >= 0 && targetX < canvas.Size && 
-                targetY >= 0 && targetY < canvas.Size)
+                targetY >= 0 && targetY < canvas.Size /*&& Around(centerX, centerY, targetX, targetY, halfSize)*/)
+            {
+                canvas.SetPixel(targetX, targetY, color);
+            }
+        }
+    }
+}
+
+private void FixLine(int centerX, int centerY, Color color)
+{
+    int halfSize = currentSize / 2;
+    
+    for (int dx = 0; dx <= halfSize; dx++)
+    {
+        for (int dy = 0; dy <= halfSize; dy++)
+        {
+            int targetX = centerX + dx;
+            int targetY = centerY + dy;
+            
+            if (targetX >= 0 && targetX < canvas.Size && 
+                targetY >= 0 && targetY < canvas.Size && Around(centerX, centerY, targetX, targetY, halfSize))
             {
                 canvas.SetPixel(targetX, targetY, color);
             }
@@ -94,10 +119,18 @@ public class Interpreter : INodeVisitor
     // Validar dirección
     if (Math.Abs(dx) > 1 || Math.Abs(dy) > 1)
     {
-        throw new Exception($"Dirección inválida: ({dx}, {dy}). Valores deben ser -1, 0 o 1");
+        CompilingErrors.Add(new CompilingError(node.StartToken.Line, ErrorCode.Invalid, ErrorStage.Runtime, $"Dirección inválida: ({dx}, {dy}). Valores deben ser -1, 0 o 1"));
     }
+
+    for (int i = 0; i < dist; i++)
+            {
+                DrawBrushAt(posX, posY, color);; // Draw the current pixel with brush size
+                posX += dx;
+                posY += dy;
+            }
+            //DrawBrushAt(posX, posY, color); // Draw the last pixel
     
-    // Calcular puntos de la línea usando Bresenham
+    /*// Calcular puntos de la línea usando Bresenham
     int x0 = posX;
     int y0 = posY;
     int x1 = posX + dx * dist;
@@ -134,11 +167,11 @@ public class Interpreter : INodeVisitor
             y += ystep;
             error += deltax;
         }
-    }
+    }*/
     
     // Actualizar posición final
-    posX = x1;
-    posY = y1;
+    //posX = x1;
+    //posY = y1;
     canvas.WallE_X = posX;
     canvas.WallE_Y = posY;
 }
@@ -160,7 +193,7 @@ private void Swap(ref int a, ref int b)
     Color color = GetCurrentColor();
     
     // Algoritmo optimizado para círculos con grosor
-    int x = 0;
+    /*int x = 0;
     int y = radius;
     int d = 3 - 2 * radius;
     
@@ -186,14 +219,61 @@ private void Swap(ref int a, ref int b)
         {
             d += 4 * x + 6;
         }
-    }
+    }*/
+
+    for (int i = -radius; i <= radius; i++)
+            {
+
+                int pixelX = centerX + i;
+                int Image = CircleImage(i, radius);
+
+                for (int j = 0; j < 2; j++)
+                {
+                    int pixelY = (int)Math.Pow(-1, j) * Image + centerY;
+
+                    if (pixelX >= 0 && pixelX < canvas.Size && pixelY >= 0 && pixelY < canvas.Size)
+                    {
+                        DrawBrushAt(pixelX, pixelY, color);
+                    }
+                }
+            }
+
+    for (int i = -radius; i <= radius; i++)
+            {
+
+                int pixelY =centerY  + i;
+                int Image = CircleImage(i, radius);
+
+                for (int j = 0; j < 2; j++)
+                {
+                    int pixelX = (int)Math.Pow(-1, j) * Image + centerX;
+
+                    if (pixelX >= 0 && pixelX < canvas.Size && pixelY >= 0 && pixelY < canvas.Size)
+                    {
+                        DrawBrushAt(pixelX, pixelY, color);
+                    }
+                }
+            }
     
     // Actualizar posición al centro del círculo
+
     posX = centerX;
     posY = centerY;
     canvas.WallE_X = posX;
     canvas.WallE_Y = posY;
 }
+
+public bool Around(int x, int y, int a, int b, int brushSize) => Math.Pow((x - a), 2) + Math.Pow((y - b), 2) <= Math.Pow(brushSize, 2);
+
+public int CircleImage(int i, int radius)
+        {
+            int Y = (int)(Math.Pow(radius, 2) - Math.Pow(i, 2));
+            Y = Math.Abs(Y);
+
+            return Math.Round(Math.Sqrt(Y),3) >= (int)Math.Sqrt(Y) + 0.5? (int)Math.Sqrt(Y)+1: (int)Math.Sqrt(Y);
+        }
+
+
 
     public void Visit(DrawRectangleStmt node)
 {
@@ -209,21 +289,33 @@ private void Swap(ref int a, ref int b)
     int startY = posY + dy * distance;
     
     // Calcular el área completa que debe cubrir el rectángulo
-    int endX = startX + width;
-    int endY = startY + height;
+    //int endX = startX + width;
+    //int endY = startY + height;
     
     // Dibujar todo el rectángulo (no solo el contorno)
-    for (int x = startX; x < endX; x++)
-    {
-        for (int y = startY; y < endY; y++)
-        {
-            DrawBrushAt(x, y, color);
-        }
-    }
+    int MidWidth = width / 2;
+    int MidHeight = height / 2;
+
+            for(int i = -MidWidth-1; i <= MidWidth+1; i++)
+            {
+                for(int j = -MidHeight-1; j <= MidHeight+1; j++)
+                {
+                    if(i == -MidWidth - 1 || j == -MidHeight - 1 || i == MidWidth + 1 || j == MidHeight + 1)
+                    {
+                        int pixelX = startX + i;
+                        int pixelY = startY + j;
+
+                        if (pixelX >= 0 && pixelX < canvas.Size && pixelY >= 0 && pixelY < canvas.Size)
+                        {
+                            DrawBrushAt(pixelX, pixelY, color);
+                        }
+                    }
+                }
+            }
     
     // Actualizar posición al punto final (esquina inferior derecha)
-    posX = endX - 1;
-    posY = endY - 1;
+    posX = startX;
+    posY = startY;
     canvas.WallE_X = posX;
     canvas.WallE_Y = posY;
 }
@@ -236,14 +328,14 @@ private void Swap(ref int a, ref int b)
 
     
 
-    private void FloodFill(int x, int y, Color target, Color replacement)
+    private void FloodFill(int x, int y, Color target, Color replacement, FillStmt node)
     {
         if (target == replacement) return;
         if (canvas.GetPixel(x, y) != target) return;
 
         if (x < 0 || x >= canvas.Size || y < 0 || y >= canvas.Size)
         {
-            throw new Exception($"Pixel coordinates ({x}, {y}) are out of canvas bounds.");
+            CompilingErrors.Add(new CompilingError(node.StartToken.Line, ErrorCode.Invalid, ErrorStage.Runtime, $"Pixel coordinates ({x}, {y}) are out of canvas bounds.")); 
         }
 
         Queue<(int x, int y)> queue = new();
@@ -269,7 +361,7 @@ private void Swap(ref int a, ref int b)
         Color target = canvas.GetPixel(posX, posY);
         Color replacement = GetCurrentColor();
 
-        FloodFill(posX, posY, target, replacement);
+        FloodFill(posX, posY, target, replacement, node);
     }
 
     public void Visit(AssignmentStmt node)
@@ -286,7 +378,7 @@ private void Swap(ref int a, ref int b)
     }
     else
     {
-        throw new Exception($"Tipo no soportado para asignación: {value.GetType().Name}");
+        CompilingErrors.Add(new CompilingError(node.StartToken.Line, ErrorCode.Invalid, ErrorStage.Runtime, $"Tipo no soportado para asignación: {value.GetType().Name}")); 
     }
 }
 
@@ -308,10 +400,10 @@ private void Swap(ref int a, ref int b)
 {
     return expr switch
     {
-        GetActualX x=>canvas.WallE_X,
-        GetActualY y=>canvas.WallE_X,
+        GetActualX =>canvas.WallE_X,
+        GetActualY =>canvas.WallE_X,
         Literal lit => lit.Value,
-        GetCanvasSize z=>canvas.Size,
+        GetCanvasSize =>canvas.Size,
         IsBrushColor w=> currentColor==w.ColorExpression.ToString()? 1:0,
         IsBrushSize r=>currentSize==Int32.Parse(r.SizeValue.ToString()),
         IsCanvasColor m=>EvaluateIsCanvasColor(m),
@@ -345,10 +437,21 @@ private void Swap(ref int a, ref int b)
         
         // Llamadas a función
         //FunctionCall call => EvaluateFunction(call),
+
         
-        _ => throw new Exception($"Expresión no soportada: {expr.GetType().Name}")
+        
+        _ => Aux(expr) 
+            
     };
+    
 }
+
+    private object Aux(Expr expr)
+    {
+        CompilingErrors.Add(new CompilingError(expr.StartToken.Line, ErrorCode.Invalid, ErrorStage.Runtime, $"Expresi'on no soportada"));
+
+        return 0;
+    }
 
     private object EvaluateFunction(FunctionCall call)
 {

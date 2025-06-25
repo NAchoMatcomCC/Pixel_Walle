@@ -4,7 +4,7 @@ public class Literal : Expr
 {
     public object Value { get; }
 
-    public Literal(object value, Token startoken) : base(startoken)
+    public Literal(object value, Token startoken, List<CompilingError> CompilingErrors) : base(startoken, CompilingErrors)
     {
         Value = value;
     }

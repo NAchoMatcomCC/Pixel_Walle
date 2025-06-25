@@ -4,8 +4,8 @@ public class DrawCircleStmt : Stmt
         public Expr DirY { get; }
         public Expr Radius { get; }
 
-        public DrawCircleStmt(Token drawToken, Expr dirX, Expr dirY, Expr radius) 
-            : base(drawToken)
+        public DrawCircleStmt(Token drawToken, Expr dirX, Expr dirY, Expr radius, List<CompilingError> CompilingErrors) 
+            : base(drawToken, CompilingErrors)
         {
             DirX = dirX;
             DirY = dirY;
@@ -21,7 +21,8 @@ public class DrawCircleStmt : Stmt
         Radius.CheckSemantics(context);
 
         if (!DirX.IsNumeric(context) || !DirY.IsNumeric(context) || !Radius.IsNumeric(context))
-            throw new Exception("DrawLine expects numeric arguments.");
+            CompilingErrors.Add(new CompilingError(StartToken.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
+        $"DrawCircle espera argumentos num'ericos"));
     }
 
     public override void Accept(INodeVisitor visitor) => visitor.Visit(this);

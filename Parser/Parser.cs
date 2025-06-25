@@ -7,11 +7,12 @@ public class Parser
     private IEnumerator<Token> tokens;
     private Token currentToken;
     private readonly SemanticContext context = new SemanticContext();
-    public List<CompilingError> Errors { get; } = new List<CompilingError>();
+    public List<CompilingError> Errors;
 
-    public Parser(IEnumerable<Token> tokens)
+    public Parser(IEnumerable<Token> tokens, List<CompilingError> compilingErrors)
     {
         this.tokens = tokens.GetEnumerator();
+        Errors=compilingErrors;
         this.tokens.MoveNext();
         currentToken = this.tokens.Current;
     }
@@ -25,7 +26,7 @@ public class Parser
         }
         else
         {
-            Errors.Add(new CompilingError(currentToken.Line, ErrorCode.Expected, 
+            Errors.Add(new CompilingError(currentToken.Line, ErrorCode.Expected, ErrorStage.Syntactic, 
                 $"Se esperaba {expectedType} pero se encontró {currentToken.Type}"));
             throw new ParseException($"Syntax Error: Expected {expectedType} but got {currentToken.Type} at line {currentToken.Line}");
         }
@@ -85,7 +86,7 @@ public class Parser
             return ParseAssignmentOrLabel();
         }
         
-        Errors.Add(new CompilingError(currentToken.Line, ErrorCode.Invalid, 
+        Errors.Add(new CompilingError(currentToken.Line, ErrorCode.Invalid, ErrorStage.Syntactic, 
             $"Token inesperado: {currentToken.Lexeme}"));
         throw new ParseException($"Token inesperado: {currentToken.Lexeme}");
     }
@@ -124,7 +125,7 @@ public class Parser
         
                 
             default:
-                Errors.Add(new CompilingError(keyword.Line, ErrorCode.Invalid, 
+                Errors.Add(new CompilingError(keyword.Line, ErrorCode.Invalid, ErrorStage.Syntactic, 
                     $"Instrucción desconocida: {keyword.Lexeme}"));
                 throw new ParseException($"Instrucción desconocida: {keyword.Lexeme}");
         }
@@ -135,7 +136,7 @@ public class Parser
         Eat(TokenType.LEFT_PAREN);
         Eat(TokenType.RIGHT_PAREN);
 
-        return new GetActualX(keyword);
+        return new GetActualX(keyword, Errors);
     }
 
     private Expr ParseGetActualY(Token keyword)
@@ -143,7 +144,7 @@ public class Parser
         Eat(TokenType.LEFT_PAREN);
         Eat(TokenType.RIGHT_PAREN);
 
-        return new GetActualY(keyword);
+        return new GetActualY(keyword, Errors);
     }
 
     private Expr ParseGetCanvasSize(Token keyword)
@@ -151,7 +152,7 @@ public class Parser
         Eat(TokenType.LEFT_PAREN);
         Eat(TokenType.RIGHT_PAREN);
 
-        return new GetCanvasSize(keyword);
+        return new GetCanvasSize(keyword, Errors);
     }
 
     private Expr ParseIsBrushColor(Token keyword)
@@ -159,7 +160,7 @@ public class Parser
         Eat(TokenType.LEFT_PAREN);
         Expr color = ParseExpression();
         Eat(TokenType.RIGHT_PAREN);
-        return new IsBrushColor(keyword, color);
+        return new IsBrushColor(keyword, color, Errors);
     }
 
     private Expr ParseIsBrushSize(Token keyword)
@@ -167,7 +168,7 @@ public class Parser
         Eat(TokenType.LEFT_PAREN);
         Expr number= ParseExpression();
         Eat(TokenType.RIGHT_PAREN);
-        return new IsBrushSize(keyword, number);
+        return new IsBrushSize(keyword, number, Errors);
     }
 
     private Expr ParseIsCanvasColor(Token keyword)
@@ -179,7 +180,7 @@ public class Parser
         Eat(TokenType.COMMA);
         Expr diry= ParseExpression();
         Eat(TokenType.RIGHT_PAREN);
-        return new IsCanvasColor(keyword, color, dirx, diry);
+        return new IsCanvasColor(keyword, color, dirx, diry, Errors);
     }
 
     private Expr ParseGetColorCount(Token keyword)
@@ -195,7 +196,7 @@ public class Parser
         Eat(TokenType.COMMA);
         Expr diry2= ParseExpression();
         Eat(TokenType.RIGHT_PAREN);
-        return new GetColorCount(keyword, color, dirx1, diry1, dirx2, diry2);
+        return new GetColorCount(keyword, color, dirx1, diry1, dirx2, diry2, Errors);
     }
 
 
@@ -206,7 +207,7 @@ public class Parser
     {
         if (context.SpawnCalled)
         {
-            Errors.Add(new CompilingError(keyword.Line, ErrorCode.Invalid, 
+            Errors.Add(new CompilingError(keyword.Line, ErrorCode.Invalid, ErrorStage.Syntactic, 
                 "Spawn solo puede llamarse una vez"));
             throw new ParseException("Spawn solo puede llamarse una vez");
         }
@@ -218,7 +219,7 @@ public class Parser
         Eat(TokenType.RIGHT_PAREN);
         
         context.SpawnCalled = true;
-        return new SpawnStmt(keyword, x, y);
+        return new SpawnStmt(keyword, x, y, Errors);
     }
 
 
@@ -228,7 +229,7 @@ public class Parser
         Eat(TokenType.LEFT_PAREN);
         Expr color = ParseExpression();
         Eat(TokenType.RIGHT_PAREN);
-        return new ColorCommand(keyword, color);
+        return new ColorCommand(keyword, color, Errors);
     }
 
     private Stmt ParseSize(Token keyword)
@@ -236,7 +237,7 @@ public class Parser
         Eat(TokenType.LEFT_PAREN);
         Expr size = ParseExpression();
         Eat(TokenType.RIGHT_PAREN);
-        return new SizeStmt(keyword, size);
+        return new SizeStmt(keyword, size, Errors);
     }
 
     private Stmt ParseDrawLine(Token keyword)
@@ -248,7 +249,7 @@ public class Parser
         Eat(TokenType.COMMA);
         Expr distance = ParseExpression();
         Eat(TokenType.RIGHT_PAREN);
-        return new DrawLineStmt(keyword, dirX, dirY, distance);
+        return new DrawLineStmt(keyword, dirX, dirY, distance, Errors);
     }
 
     private Stmt ParseDrawCircle(Token keyword)
@@ -260,7 +261,7 @@ public class Parser
         Eat(TokenType.COMMA);
         Expr radius = ParseExpression();
         Eat(TokenType.RIGHT_PAREN);
-        return new DrawCircleStmt(keyword, dirX, dirY, radius);
+        return new DrawCircleStmt(keyword, dirX, dirY, radius, Errors);
     }
 
     private Stmt ParseDrawRectangle(Token keyword)
@@ -276,14 +277,14 @@ public class Parser
         Eat(TokenType.COMMA);
         Expr height = ParseExpression();
         Eat(TokenType.RIGHT_PAREN);
-        return new DrawRectangleStmt(keyword, dirX, dirY, distance, width, height);
+        return new DrawRectangleStmt(keyword, dirX, dirY, distance, width, height, Errors);
     }
 
     private Stmt ParseFill(Token keyword)
     {
         Eat(TokenType.LEFT_PAREN);
         Eat(TokenType.RIGHT_PAREN);
-        return new FillStmt(keyword);
+        return new FillStmt(keyword, Errors);
     }
 
     private Stmt ParseGoTo(Token keyword)
@@ -295,7 +296,7 @@ public class Parser
         Eat(TokenType.LEFT_PAREN);
         Expr condition = ParseExpression();
         Eat(TokenType.RIGHT_PAREN);
-        return new GoTo(labelToken.Lexeme, condition, keyword);
+        return new GoTo(labelToken.Lexeme, condition, keyword, Errors);
     }
 
     private Stmt ParseAssignmentOrLabel()
@@ -321,15 +322,19 @@ public class Parser
                 else if(aux.Lexeme=="IsCanvasColor") expr=ParseIsCanvasColor(aux);
                 else if(aux.Lexeme=="GetColorCount") expr=ParseGetColorCount(aux);
                 else
-                  throw new Exception("No se reconoce esa funci'on");
-
+                {
+                  Errors.Add(new CompilingError(currentToken.Line, ErrorCode.Unknown, ErrorStage.Syntactic, 
+                  $" No se reconoce esta función: {currentToken.Lexeme}"));
+                
+                  throw new Exception($"se reconoce esa funci'on {currentToken.Lexeme}");
+                }
             }
             else expr = ParseExpression();
-            return new AssignmentStmt(identifier, expr);
+            return new AssignmentStmt(identifier, expr, Errors);
         }
         else
         {
-            return new Label(identifier.Lexeme, identifier);
+            return new Label(identifier.Lexeme, identifier, Errors);
         }
     }
 
@@ -349,7 +354,7 @@ private Expr ParseLogicalOr()
         Token op = currentToken;
         Eat(TokenType.OR);
         Expr right = ParseLogicalAnd();
-        expr = new OrExpr(expr, op, right);
+        expr = new OrExpr(expr, op, right, Errors);
     }
 
     return expr;
@@ -364,7 +369,7 @@ private Expr ParseLogicalAnd()
         Token op = currentToken;
         Eat(TokenType.AND);
         Expr right = ParseEquality();
-        expr = new AndExpr(expr, op, right);
+        expr = new AndExpr(expr, op, right, Errors);
     }
 
     return expr;
@@ -381,8 +386,8 @@ private Expr ParseEquality()
         Expr right = ParseComparison();
         
         expr = op.Type == TokenType.EQUAL_EQUAL ? 
-            (Expr)new EqualExpr(expr, op, right) : 
-            new NotEqualExpr(expr, op, right);
+            (Expr)new EqualExpr(expr, op, right, Errors) : 
+            new NotEqualExpr(expr, op, right, Errors);
     }
 
     return expr;
@@ -401,10 +406,10 @@ private Expr ParseComparison()
         
         expr = op.Type switch
         {
-            TokenType.GREATER => new GreaterExpr(expr, op, right),
-            TokenType.GREATER_EQUAL => new GreaterEqualExpr(expr, op, right),
-            TokenType.LESS => new LessExpr(expr, op, right),
-            TokenType.LESS_EQUAL => new LessEqualExpr(expr, op, right),
+            TokenType.GREATER => new GreaterExpr(expr, op, right, Errors),
+            TokenType.GREATER_EQUAL => new GreaterEqualExpr(expr, op, right, Errors),
+            TokenType.LESS => new LessExpr(expr, op, right, Errors),
+            TokenType.LESS_EQUAL => new LessEqualExpr(expr, op, right, Errors),
             _ => expr
         };
     }
@@ -422,8 +427,8 @@ private Expr ParseTerm()
         Eat(currentToken.Type);
         Expr right = ParseFactor();
         expr = op.Type == TokenType.PLUS ? 
-            (Expr)new AddExpr(expr, op, right) : 
-            new SubtractExpr(expr, op, right);
+            (Expr)new AddExpr(expr, op, right, Errors) : 
+            new SubtractExpr(expr, op, right, Errors);
     }
 
     return expr;
@@ -442,10 +447,10 @@ private Expr ParseFactor()
         
         expr = op.Type switch
         {
-            TokenType.STAR => new MultiplyExpr(expr, op, right),
-            TokenType.SLASH => new DivideExpr(expr, op, right),
-            TokenType.PERCENT => new ModuloExpr(expr, op, right),
-            TokenType.CARET => new PowerExpr(expr, op, right),
+            TokenType.STAR => new MultiplyExpr(expr, op, right, Errors),
+            TokenType.SLASH => new DivideExpr(expr, op, right, Errors),
+            TokenType.PERCENT => new ModuloExpr(expr, op, right, Errors),
+            TokenType.CARET => new PowerExpr(expr, op, right, Errors),
             _ => expr
         };
     }
@@ -462,8 +467,8 @@ private Expr ParseUnary()
         Expr right = ParseUnary();
         
         return op.Type == TokenType.BANG ? 
-            (Expr)new NotExpr(right, op) : 
-            new NegateExpr(right, op);
+            (Expr)new NotExpr(right, op, Errors) : 
+            new NegateExpr(right, op, Errors);
     }
 
     return ParsePrimary();
@@ -476,7 +481,7 @@ private Expr ParsePrimary()
         int value = int.Parse(currentToken.Lexeme);
         Token token = currentToken;
         Eat(TokenType.NUMBER);
-        return new Literal(value, token);
+        return new Literal(value, token, Errors);
     }
     
     if (currentToken.Type == TokenType.STRING)
@@ -484,7 +489,7 @@ private Expr ParsePrimary()
         string value = (string)currentToken.Literal;
         Token token = currentToken;
         Eat(TokenType.STRING);
-        return new Literal(value, token);
+        return new Literal(value, token, Errors);
     }
     
     if (currentToken.Type == TokenType.TRUE || currentToken.Type == TokenType.FALSE)
@@ -492,7 +497,7 @@ private Expr ParsePrimary()
         bool value = currentToken.Type == TokenType.TRUE;
         Token token = currentToken;
         Eat(currentToken.Type);
-        return new Literal(value, token);
+        return new Literal(value, token, Errors);
     }
     
     if (currentToken.Type == TokenType.IDENTIFIER)
@@ -516,10 +521,10 @@ private Expr ParsePrimary()
                 }
             }
             Eat(TokenType.RIGHT_PAREN);
-            return new FunctionCall(identifier, args, token);
+            return new FunctionCall(identifier, args, token, Errors);
         }
 
-        return new Var(identifier, token);
+        return new Var(identifier, token, Errors);
     }
     
     if (currentToken.Type == TokenType.LEFT_PAREN)
@@ -527,10 +532,10 @@ private Expr ParsePrimary()
         Eat(TokenType.LEFT_PAREN);
         Expr expr = ParseExpression();
         Eat(TokenType.RIGHT_PAREN);
-        return new Grouping(expr, currentToken);
+        return new Grouping(expr, currentToken, Errors);
     }
     
-    Errors.Add(new CompilingError(currentToken.Line, ErrorCode.Invalid, 
+    Errors.Add(new CompilingError(currentToken.Line, ErrorCode.Invalid, ErrorStage.Syntactic, 
         $"Expresión inválida: {currentToken.Lexeme}"));
     throw new ParseException($"Expresión inválida: {currentToken.Lexeme}");
 }

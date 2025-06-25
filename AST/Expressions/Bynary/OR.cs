@@ -1,7 +1,7 @@
 public class AndExpr : BinaryExpr
 {
-    public AndExpr(Expr left, Token opToken, Expr right)
-        : base(left, opToken, right) { }
+    public AndExpr(Expr left, Token opToken, Expr right, List<CompilingError> CompilingErrors)
+        : base(left, opToken, right, CompilingErrors) { }
 
    
 
@@ -14,7 +14,8 @@ public class AndExpr : BinaryExpr
         Right.CheckSemantics(context);
 
         if (!Left.IsBoolean(context) || !Right.IsBoolean(context))
-            throw new Exception("Logical AND operands must be boolean.");
+            CompilingErrors.Add(new CompilingError(Operator.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
+        $"OR recibe expresiones booleanas (1 y 0)"));
     }
 
     public override string ToString() => $"({Left} || {Right})";

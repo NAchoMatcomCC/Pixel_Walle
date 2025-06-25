@@ -5,10 +5,12 @@ class Lexer
     private int start = 0;
     private int current = 0;
     private int line = 1;
+    List<CompilingError> CompilingErrors;
 
-    public Lexer(string source)
+    public Lexer(string source, List<CompilingError> compilingErrors)
     {
         this.source = source;
+        CompilingErrors=compilingErrors;
     }
 
     private static readonly Dictionary<string, TokenType> Keywords = new()
@@ -81,7 +83,8 @@ class Lexer
                 if (IsDigit(c)) ReadNumber();
                 else if (IsAlpha(c)) ReadIdentifier();
                 
-                else throw new Exception($"Carácter inesperado en línea {line}: '{c}'");
+                else CompilingErrors.Add(new CompilingError(line, ErrorCode.Unknown, ErrorStage.Lexical, 
+                $"Carácter inesperado: '{c}'"));
                 break;
         }
     }
@@ -116,7 +119,7 @@ class Lexer
             Advance();
         }
 
-        if (IsAtEnd()) throw new Exception($"Cadena no cerrada en línea {line}");
+        if (IsAtEnd()) CompilingErrors.Add(new CompilingError(line, ErrorCode.Invalid, ErrorStage.Lexical, $"Cadena no cerrada"));
         Advance();
 
         string value = source.Substring(start + 1, current - start - 2);

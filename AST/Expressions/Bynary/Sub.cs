@@ -1,11 +1,12 @@
 public class SubtractExpr : BinaryExpr {
-    public SubtractExpr(Expr left, Token op, Expr right) :  base(left, op, right) { }
+    public SubtractExpr(Expr left, Token op, Expr right, List<CompilingError> CompilingErrors) :  base(left, op, right, CompilingErrors) { }
 
     public override void CheckSemantics(SemanticContext context) {
         Left.CheckSemantics(context);
         Right.CheckSemantics(context);
         if (!Left.IsNumeric(context) || !Right.IsNumeric(context))
-            throw new Exception("Subtraction operands must be numeric.");
+            CompilingErrors.Add(new CompilingError(Operator.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
+        $"La resta debe ser entre dos n'umeros"));
     }
 
     public override bool IsNumeric(SemanticContext context) => true;

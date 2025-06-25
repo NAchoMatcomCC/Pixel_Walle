@@ -52,7 +52,7 @@
               "RelativeDocumentMoniker": "Form2.cs",
               "ToolTip": "D:\\Universidad\\MATCOM\\Programaci\u00F3n\\2do_proyecto\\Segundo_Proyecto1.0\\Form2.cs",
               "RelativeToolTip": "Form2.cs",
-              "ViewState": "AgIAAAMAAAAAAAAAAAAAAAMAAAASAAAAAAAAAA==",
+              "ViewState": "AgIAAAAAAAAAAAAAAIBJwAMAAAASAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
               "WhenOpened": "2025-05-29T09:13:30.642Z",
               "EditorCaption": ""
@@ -65,20 +65,22 @@
               "RelativeDocumentMoniker": "Form2.Designer.cs",
               "ToolTip": "D:\\Universidad\\MATCOM\\Programaci\u00F3n\\2do_proyecto\\Segundo_Proyecto1.0\\Form2.Designer.cs",
               "RelativeToolTip": "Form2.Designer.cs",
-              "ViewState": "AgIAABQAAAAAAAAAAAAgwCMAAAAIAAAAAAAAAA==",
+              "ViewState": "AgIAABQAAAAAAAAAAAAgwBgAAAAIAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-29T09:12:44.614Z"
+              "WhenOpened": "2025-05-29T09:12:44.614Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
               "DocumentIndex": 2,
-              "Title": "Form2.cs [Dise\u00F1o]",
+              "Title": "Form2.cs [Design]",
               "DocumentMoniker": "D:\\Universidad\\MATCOM\\Programaci\u00F3n\\2do_proyecto\\Segundo_Proyecto1.0\\Form2.cs",
               "RelativeDocumentMoniker": "Form2.cs",
-              "ToolTip": "D:\\Universidad\\MATCOM\\Programaci\u00F3n\\2do_proyecto\\Segundo_Proyecto1.0\\Form2.cs [Dise\u00F1o]",
-              "RelativeToolTip": "Form2.cs [Dise\u00F1o]",
+              "ToolTip": "D:\\Universidad\\MATCOM\\Programaci\u00F3n\\2do_proyecto\\Segundo_Proyecto1.0\\Form2.cs [Design]",
+              "RelativeToolTip": "Form2.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-29T09:12:13.172Z"
+              "WhenOpened": "2025-05-29T09:12:13.172Z",
+              "EditorCaption": " [Design]"
             },
             {
               "$type": "Document",
@@ -90,7 +92,8 @@
               "RelativeToolTip": "Form1.Designer.cs",
               "ViewState": "AgIAAAAAAAAAAAAAAAAAAAQAAAAbAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-28T15:23:38.368Z"
+              "WhenOpened": "2025-05-28T15:23:38.368Z",
+              "EditorCaption": ""
             },
             {
               "$type": "Document",
@@ -108,13 +111,14 @@
             {
               "$type": "Document",
               "DocumentIndex": 1,
-              "Title": "Form1.cs [Dise\u00F1o]",
+              "Title": "Form1.cs [Design]",
               "DocumentMoniker": "D:\\Universidad\\MATCOM\\Programaci\u00F3n\\2do_proyecto\\Segundo_Proyecto1.0\\Form1.cs",
               "RelativeDocumentMoniker": "Form1.cs",
-              "ToolTip": "D:\\Universidad\\MATCOM\\Programaci\u00F3n\\2do_proyecto\\Segundo_Proyecto1.0\\Form1.cs [Dise\u00F1o]",
-              "RelativeToolTip": "Form1.cs [Dise\u00F1o]",
+              "ToolTip": "D:\\Universidad\\MATCOM\\Programaci\u00F3n\\2do_proyecto\\Segundo_Proyecto1.0\\Form1.cs [Design]",
+              "RelativeToolTip": "Form1.cs [Design]",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-28T15:21:51.606Z"
+              "WhenOpened": "2025-05-28T15:21:51.606Z",
+              "EditorCaption": " [Design]"
             },
             {
               "$type": "Document",
@@ -126,7 +130,8 @@
               "RelativeToolTip": "Program.cs",
               "ViewState": "AgIAAAUAAAAAAAAAAAASwA8AAAAMAAAAAAAAAA==",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2025-05-28T15:25:20.824Z"
+              "WhenOpened": "2025-05-28T15:25:20.824Z",
+              "EditorCaption": ""
             }
           ]
         }

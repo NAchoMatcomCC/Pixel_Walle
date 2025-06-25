@@ -6,8 +6,8 @@ public class DrawRectangleStmt : Stmt
         public Expr Width { get; }
         public Expr Height { get; }
 
-        public DrawRectangleStmt(Token drawToken, Expr dirX, Expr dirY, Expr distance, Expr width, Expr height) 
-            : base(drawToken)
+        public DrawRectangleStmt(Token drawToken, Expr dirX, Expr dirY, Expr distance, Expr width, Expr height, List<CompilingError> CompilingErrors) 
+            : base(drawToken, CompilingErrors)
         {
             DirX = dirX;
             DirY = dirY;
@@ -29,7 +29,8 @@ public class DrawRectangleStmt : Stmt
 
         if (!DirX.IsNumeric(context) || !DirY.IsNumeric(context) ||
             !Distance.IsNumeric(context) || !Width.IsNumeric(context) || !Height.IsNumeric(context))
-            throw new Exception("DrawRectangle expects numeric arguments.");
+           CompilingErrors.Add(new CompilingError(StartToken.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
+        $"DrawRectangle espera argumentos num'ericos"));
     }
 
 

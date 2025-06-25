@@ -2,7 +2,7 @@ public class Var : Expr
 {
     public string Name { get; }
 
-    public Var(string name, Token startoken) : base(startoken)
+    public Var(string name, Token startoken, List<CompilingError> CompilingErrors) : base(startoken, CompilingErrors)
     {
         Name = name;
     }
@@ -10,7 +10,8 @@ public class Var : Expr
     public override void CheckSemantics(SemanticContext context)
     {
         if (!context.IsVariableDefined(Name))
-            throw new Exception($"Variable '{Name}' is not defined.");
+            CompilingErrors.Add(new CompilingError(StartToken.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
+        $"Variable no definida"));;
     }
 
     public override bool IsNumeric(SemanticContext context) => context.IsVariableNumeric(Name);

@@ -11,8 +11,8 @@ public class GetColorCount : Expr
         "Red", "Blue", "Green", "Yellow", "Orange",
         "Purple", "Black", "White", "Transparent"
     };
-        public GetColorCount(Token colorToken, Expr color, Expr dirx1, Expr diry1, Expr dirx2, Expr diry2) 
-        : base(colorToken)
+        public GetColorCount(Token colorToken, Expr color, Expr dirx1, Expr diry1, Expr dirx2, Expr diry2, List<CompilingError> CompilingErrors) 
+        : base(colorToken, CompilingErrors)
     {
         ColorExpression=color;
         DirX1=dirx1;
@@ -30,13 +30,15 @@ public class GetColorCount : Expr
         ColorExpression.CheckSemantics(context);
 
         if (!DirX1.IsNumeric(context) || !DirY1.IsNumeric(context) || !DirX2.IsNumeric(context) || !DirY2.IsNumeric(context))
-            throw new Exception("IsCanvasColor expects numeric arguments.");
+            CompilingErrors.Add(new CompilingError(StartToken.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
+        $"GetColorCount espera argumentos num'ericos"));
         
         // Check if it's a string literal
         if (ColorExpression is Literal literal && literal.Value is string colorValue)
         {
             if (!AllowedColors.Contains(colorValue))
-                throw new Exception($"Color '{colorValue}' no válido");
+                CompilingErrors.Add(new CompilingError(StartToken.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
+        $"Color {colorValue} no v'alido"));
         }
         // Else: runtime check will be needed
     }

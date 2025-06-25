@@ -6,12 +6,14 @@ public class ProgramRunner
     private readonly Dictionary<string, int> labelMap = new();
     private readonly Interpreter interpreter;
     private readonly CanvasData canvas;
+    private List<CompilingError> CompilingErrors;
 
-    public ProgramRunner(List<ASTNode> program, CanvasData canvas)
+    public ProgramRunner(List<ASTNode> program, CanvasData canvas, List<CompilingError> compilingErrors)
     {
         this.canvas=canvas;
         this.program = program;
-        this.interpreter = new Interpreter(canvas);
+        CompilingErrors=compilingErrors;
+        this.interpreter = new Interpreter(canvas, compilingErrors);
         IndexLabels();
     }
 
@@ -22,7 +24,8 @@ public class ProgramRunner
             if (program[i] is Label label)
             {
                 if (labelMap.ContainsKey(label.Name))
-                    throw new Exception($"Label '{label.Name}' already defined.");
+                    {CompilingErrors.Add(new CompilingError(label.StartToken.Line, ErrorCode.Invalid, ErrorStage.Semantic, $"Label '{label.Name}' ya fue definida"));
+                    return;}
 
                 labelMap[label.Name] = i;
             }
@@ -31,9 +34,8 @@ public class ProgramRunner
 
     public void Run()
     {
-        try
-        {
-            for (int pc = 0; pc < program.Count; pc++)
+        
+        for (int pc = 0; pc < program.Count; pc++)
         {
             var node = program[pc];
 
@@ -44,25 +46,26 @@ public class ProgramRunner
                 if (result is int n && n != 0)
                 {
                     if (!labelMap.TryGetValue(jump.LabelName, out int targetIndex))
-                    throw new Exception($"Label '{jump.LabelName}' not found.");
+                    {CompilingErrors.Add(new CompilingError(jump.StartToken.Line, ErrorCode.Invalid, ErrorStage.Runtime, $"Label '{jump.LabelName}' no encontrada"));
+                        break;}
 
                     pc = targetIndex - 1;
                 }
             }
-
-            node.Accept(interpreter);
-        }
-        }
-        catch (System.Exception ex)
-        {
-            int line = 0;
-            if (program.Count > 0 && program[0] is ASTNode firstNode)
+            try
             {
-                line = firstNode.StartToken.Line;
+                node.Accept(interpreter);
             }
-        
-            throw new Exception($"[Línea {line}] Error en ejecución: {ex.Message}");
+            catch (System.Exception ex)
+            {
+                CompilingErrors.Add(new CompilingError(node.StartToken.Line, ErrorCode.Invalid, ErrorStage.Runtime, $"Error en ejecución: {ex.Message}"));
+                break;
+            }
+
+            
         }
+        
+        
         
     }
 }

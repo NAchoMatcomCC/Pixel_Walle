@@ -8,8 +8,8 @@ public class IsBrushColor : Expr
         "Red", "Blue", "Green", "Yellow", "Orange",
         "Purple", "Black", "White", "Transparent"
     };
-        public IsBrushColor(Token colorToken, Expr colorExpression) 
-        : base(colorToken)
+        public IsBrushColor(Token colorToken, Expr colorExpression, List<CompilingError> CompilingErrors) 
+        : base(colorToken, CompilingErrors)
     {
         ColorExpression = colorExpression;
     }
@@ -22,7 +22,8 @@ public class IsBrushColor : Expr
         if (ColorExpression is Literal literal && literal.Value is string colorValue)
         {
             if (!AllowedColors.Contains(colorValue))
-                throw new Exception($"Color '{colorValue}' no válido");
+                CompilingErrors.Add(new CompilingError(StartToken.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
+        $"Color {colorValue} no v'alido"));
         }
         // Else: runtime check will be needed
     }

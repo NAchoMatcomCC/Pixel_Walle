@@ -1,7 +1,7 @@
 public class DivideExpr : BinaryExpr
 {
-    public DivideExpr(Expr left, Token opToken, Expr right)
-        : base(left, opToken, right) { }
+    public DivideExpr(Expr left, Token opToken, Expr right, List<CompilingError> CompilingErrors)
+        : base(left, opToken, right, CompilingErrors) { }
 
     
 
@@ -14,11 +14,13 @@ public class DivideExpr : BinaryExpr
         Right.CheckSemantics(context);
 
         if (!Left.IsNumeric(context) || !Right.IsNumeric(context))
-            throw new Exception("Division operands must be numeric.");
+            CompilingErrors.Add(new CompilingError(Operator.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
+            $"Se deben dividir números"));
         
         // Verificar división por cero en tiempo de compilación si es posible
         if (Right is Literal lit && Convert.ToDouble(lit.Value) == 0)
-            throw new Exception("Division by zero is not allowed.");
+        CompilingErrors.Add(new CompilingError(Operator.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
+        $"No se admite dividir entre cero"));
     }
 
     public override string ToString() => $"({Left} / {Right})";

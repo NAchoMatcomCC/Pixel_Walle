@@ -2,8 +2,8 @@ public class GetCanvasSize : Expr
     {
         public Expr SizeValue { get; }
 
-        public GetCanvasSize(Token sizeToken) 
-            : base(sizeToken)
+        public GetCanvasSize(Token sizeToken, List<CompilingError> CompilingErrors) 
+            : base(sizeToken, CompilingErrors)
         {
             
         }

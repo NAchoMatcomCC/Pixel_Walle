@@ -3,8 +3,8 @@ public class SpawnStmt : Stmt
         public Expr X { get; }
         public Expr Y { get; }
 
-        public SpawnStmt(Token spawnToken, Expr x, Expr y) 
-            : base(spawnToken)
+        public SpawnStmt(Token spawnToken, Expr x, Expr y, List<CompilingError> CompilingErrors) 
+            : base(spawnToken, CompilingErrors)
         {
             X = x;
             Y = y;
@@ -14,16 +14,20 @@ public class SpawnStmt : Stmt
 
         public override void CheckSemantics(SemanticContext context)
         {
+            X.CheckSemantics(context);
+            Y.CheckSemantics(context);
+
             if (context.SpawnCalled)
-                throw new Exception("Spawn can only be called once.");
+                CompilingErrors.Add(new CompilingError(StartToken.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
+        $"Spawn solo puede ser utilizado una vez"));
     
             if (!X.IsNumeric(context) || !Y.IsNumeric(context))
-                throw new Exception("Spawn arguments must be numeric.");
+                CompilingErrors.Add(new CompilingError(StartToken.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
+        $"Spawn espera argumentos num'ericos"));
     
             context.SpawnCalled = true;
     
-            X.CheckSemantics(context);
-            Y.CheckSemantics(context);
+    
         }
 
 
