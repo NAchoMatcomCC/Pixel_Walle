@@ -188,8 +188,8 @@ private void Swap(ref int a, ref int b)
     int centerDx = (int)Evaluate(node.DirX);
     int centerDy = (int)Evaluate(node.DirY);
     int radius = (int)Evaluate(node.Radius);
-    int centerX = posX + centerDx;
-    int centerY = posY + centerDy;
+    int centerX = posX + centerDx*radius;
+    int centerY = posY + centerDy*radius;
     Color color = GetCurrentColor();
     
     // Algoritmo optimizado para círculos con grosor

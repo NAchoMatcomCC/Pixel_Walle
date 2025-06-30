@@ -6,7 +6,7 @@ public class Parser
 {
     private IEnumerator<Token> tokens;
     private Token currentToken;
-    private readonly SemanticContext context = new SemanticContext();
+    public SemanticContext context = new SemanticContext();
     public List<CompilingError> Errors;
 
     public Parser(IEnumerable<Token> tokens, List<CompilingError> compilingErrors)
@@ -218,7 +218,7 @@ public class Parser
         Expr y = ParseExpression();
         Eat(TokenType.RIGHT_PAREN);
         
-        context.SpawnCalled = true;
+        //context.SpawnCalled = true;
         return new SpawnStmt(keyword, x, y, Errors);
     }
 

@@ -18,14 +18,18 @@ public class SpawnStmt : Stmt
             Y.CheckSemantics(context);
 
             if (context.SpawnCalled)
+            {
                 CompilingErrors.Add(new CompilingError(StartToken.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
-        $"Spawn solo puede ser utilizado una vez"));
+                $"Spawn solo puede ser utilizado una vez"));
+            }
     
             if (!X.IsNumeric(context) || !Y.IsNumeric(context))
+            {
                 CompilingErrors.Add(new CompilingError(StartToken.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
-        $"Spawn espera argumentos num'ericos"));
+                $"Spawn espera argumentos num'ericos"));
     
-            context.SpawnCalled = true;
+                context.SpawnCalled = true;
+            }
     
     
         }

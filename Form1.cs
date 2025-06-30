@@ -9,6 +9,7 @@ namespace Segundo_Proyecto1._0
 {
     public partial class MainForm : Form
     {
+        private List<CompilingError> errors;
         string[] keywords = {
         "Spawn", "Color", "Size", "DrawLine", "DrawCircle", "DrawRectangle",
         "Fill", "GoTo", "GetActualX", "GetActualY", "IsBrushSize", "IsCanvasColor", "IsBrushColor", "GetCanvasSize",
@@ -311,18 +312,8 @@ namespace Segundo_Proyecto1._0
         private void canvas_Panel_Paint(object sender, PaintEventArgs e)
         {
             int cellSize = canvas_Panel.Width / canvasData.Size;
-            for (int x = 0; x < canvasData.Size; x++)
-            {
-                for (int y = 0; y < canvasData.Size; y++)
-                {
-                    Color color = canvasData.GetPixel(x, y);
-                    using (Brush b = new SolidBrush(color))
-                    {
-                        e.Graphics.FillRectangle(b, x * cellSize, y * cellSize, cellSize, cellSize);
-                        e.Graphics.DrawRectangle(Pens.Gray, x * cellSize, y * cellSize, cellSize, cellSize);
-                    }
-                }
-            }
+            Bitmap bmp = canvasData.GetBitmap(canvas_Panel.Width, canvas_Panel.Height);
+            e.Graphics.DrawImage(bmp, 0, 0);
 
         if(canvasData.WallE_X!=null){
             int drawX = canvasData.WallE_X * cellSize;
@@ -342,7 +333,7 @@ namespace Segundo_Proyecto1._0
 
         private void canvas_Panel_MouseClick(object sender, MouseEventArgs e)
         {
-            CanvasForm canvasForm = new CanvasForm(canvasData);
+            CanvasForm canvasForm = new CanvasForm(canvasData, errors);
             canvasForm.Show();
         }
 
@@ -362,7 +353,7 @@ namespace Segundo_Proyecto1._0
 
         private void button3_Click(object sender, EventArgs e)
         {
-            List<CompilingError> errors = new(); // Centralizar errores
+            errors = new(); // Centralizar errores
 
     try
     {
@@ -372,10 +363,10 @@ namespace Segundo_Proyecto1._0
 
         var parser = new Parser(tokens, errors);
         List<Stmt> program = parser.Parse();
-        SemanticContext context=new SemanticContext();
+        
         for (int i = 0; i < program.Count; i++)
         {
-            program[i].CheckSemantics(context);
+            program[i].CheckSemantics(parser.context);
         }
         List<ASTNode> astNodes = program.Cast<ASTNode>().ToList();
 

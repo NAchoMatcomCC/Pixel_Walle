@@ -17,9 +17,9 @@ public class GoTo : Stmt
             CompilingErrors.Add(new CompilingError(StartToken.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
         $"La condici'on debe ser booleana"));
 
-        if (!context.IsLabelDefined(LabelName))
+        /*if (!context.IsLabelDefined(LabelName))
             CompilingErrors.Add(new CompilingError(StartToken.Line, ErrorCode.Invalid, ErrorStage.Semantic, 
-        $"La estiqueta {LabelName} no est'a definida"));
+        $"La estiqueta {LabelName} no est'a definida"));*/
     }
 
     public override void Accept(INodeVisitor visitor) => visitor.Visit(this);
